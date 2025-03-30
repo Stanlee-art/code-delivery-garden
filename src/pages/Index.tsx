@@ -8,27 +8,72 @@ import { CommentSection } from '@/components/CommentSection';
 import { QRSection } from '@/components/QRSection';
 import { RatingPopup } from '@/components/RatingPopup';
 import { menuData } from '@/data/menuData';
+import { translations, SupportedLanguage } from '@/utils/translations';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('food');
   const [showRatingPopup, setShowRatingPopup] = useState(false);
   const [selectedRatings, setSelectedRatings] = useState<Record<string, number>>({});
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState<SupportedLanguage>('en');
   const [searchQuery, setSearchQuery] = useState('');
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showCategoryPopup, setShowCategoryPopup] = useState(false);
+
+  // Load dark mode preference from localStorage on component mount
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.body.classList.add('dark-mode');
+    }
+
+    // Load saved ratings
+    const loadSavedRatings = () => {
+      const savedRatings: Record<string, number> = {};
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('rating-')) {
+          const itemId = key.replace('rating-', '');
+          const rating = parseInt(localStorage.getItem(key) || '0');
+          if (!isNaN(rating)) {
+            savedRatings[itemId] = rating;
+          }
+        }
+      });
+      setSelectedRatings(savedRatings);
+    };
+
+    loadSavedRatings();
+  }, []);
 
   // Toggle dark mode
   const toggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
-    document.body.classList.toggle('dark-mode');
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    document.body.classList.toggle('dark-mode', newDarkMode);
+    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
 
   // Change language
-  const changeLanguage = (language: string) => {
-    setLanguage(language);
-    // In a real application, this would trigger translations
+  const changeLanguage = (lang: SupportedLanguage) => {
+    setLanguage(lang);
+    showNotification(`Language changed to ${lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Swahili'}`);
+  };
+
+  // Show notification
+  const showNotification = (message: string) => {
+    const notificationElement = document.getElementById('notificationBox');
+    if (notificationElement) {
+      notificationElement.textContent = message;
+      notificationElement.classList.remove('hidden');
+      notificationElement.classList.add('show');
+      
+      setTimeout(() => {
+        notificationElement.classList.remove('show');
+        notificationElement.classList.add('hidden');
+      }, 3000);
+    }
   };
 
   // Handle search
@@ -44,10 +89,13 @@ const Index = () => {
 
   // Handle rating click
   const handleRatingClick = (itemId: string, value: number) => {
-    setSelectedRatings(prev => ({
-      ...prev,
+    const newRatings = {
+      ...selectedRatings,
       [itemId]: value
-    }));
+    };
+    
+    setSelectedRatings(newRatings);
+    localStorage.setItem(`rating-${itemId}`, value.toString());
     setShowRatingPopup(true);
   };
 
@@ -56,19 +104,21 @@ const Index = () => {
     // In a real application, this would submit ratings to a server
     console.log('Submitting ratings:', selectedRatings);
     setShowRatingPopup(false);
-    
-    // Show a notification
-    const notificationElement = document.getElementById('notificationBox');
-    if (notificationElement) {
-      notificationElement.textContent = 'Ratings submitted successfully!';
-      notificationElement.classList.remove('hidden');
-      notificationElement.classList.add('show');
-      
-      setTimeout(() => {
-        notificationElement.classList.remove('show');
-        notificationElement.classList.add('hidden');
-      }, 3000);
+    showNotification('Ratings submitted successfully!');
+  };
+
+  // Toggle food category popup
+  const toggleCategoryPopup = () => {
+    setShowCategoryPopup(!showCategoryPopup);
+  };
+
+  // Handle category selection
+  const handleCategorySelect = (category: string) => {
+    const element = document.getElementById(category);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    setShowCategoryPopup(false);
   };
 
   return (
@@ -77,7 +127,7 @@ const Index = () => {
         isDarkMode={isDarkMode} 
         toggleDarkMode={toggleDarkMode} 
         language={language} 
-        changeLanguage={changeLanguage}
+        changeLanguage={(lang) => changeLanguage(lang as SupportedLanguage)}
         searchQuery={searchQuery}
         handleSearch={handleSearch}
         isMobile={isMobile}
@@ -95,12 +145,53 @@ const Index = () => {
         {/* Food Section */}
         {activeSection === 'food' && (
           <section id="food" className="menu-category">
-            <h1 id="foodHeading">Food</h1>
+            <h1 
+              id="foodHeading" 
+              onClick={toggleCategoryPopup}
+              className={`cursor-pointer ${showCategoryPopup ? 'active-header' : ''}`}
+            >
+              {translations[language].food}
+            </h1>
+            
+            {/* Category Popup */}
+            {showCategoryPopup && (
+              <div id="categoryPopup" className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-5 rounded-lg shadow-lg z-50 w-80">
+                <p className="font-bold mb-4">Choose a category:</p>
+                <div className="space-y-2">
+                  <button 
+                    className="w-full bg-[#684b2c] hover:bg-[#a77e58] text-white p-2 rounded transition transform hover:scale-105"
+                    onClick={() => handleCategorySelect('appetizersSection')}
+                  >
+                    {translations[language].appetizers}
+                  </button>
+                  <button 
+                    className="w-full bg-[#684b2c] hover:bg-[#a77e58] text-white p-2 rounded transition transform hover:scale-105"
+                    onClick={() => handleCategorySelect('mainCourseSection')}
+                  >
+                    {translations[language].mainCourse}
+                  </button>
+                  <button 
+                    className="w-full bg-[#684b2c] hover:bg-[#a77e58] text-white p-2 rounded transition transform hover:scale-105"
+                    onClick={() => handleCategorySelect('dessertsSection')}
+                  >
+                    {translations[language].desserts}
+                  </button>
+                  <button 
+                    id="cancelBtn"
+                    className="w-full bg-[#a77e58] hover:bg-[#574d41] text-white p-2 rounded mt-4 transition transform hover:scale-105"
+                    onClick={() => setShowCategoryPopup(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            
             <div id="menuCategories">
               {/* Appetizers */}
               <section id="appetizersSection">
                 <MenuSection 
-                  title="Appetizers" 
+                  title={translations[language].appetizers}
                   items={menuData.appetizers}
                   searchQuery={searchQuery}
                   onRatingClick={handleRatingClick}
@@ -111,7 +202,7 @@ const Index = () => {
               {/* Main Course */}
               <section id="mainCourseSection">
                 <MenuSection 
-                  title="Main Course" 
+                  title={translations[language].mainCourse}
                   items={menuData.mainCourse}
                   searchQuery={searchQuery}
                   onRatingClick={handleRatingClick}
@@ -122,7 +213,7 @@ const Index = () => {
               {/* Desserts */}
               <section id="dessertsSection">
                 <MenuSection 
-                  title="Desserts" 
+                  title={translations[language].desserts}
                   items={menuData.desserts}
                   searchQuery={searchQuery}
                   onRatingClick={handleRatingClick}
@@ -136,9 +227,9 @@ const Index = () => {
         {/* Beverages Section */}
         {activeSection === 'beverages' && (
           <section id="beverages" className="menu-category">
-            <h2 id="beveragesHeading">Beverages</h2>
+            <h2 id="beveragesHeading">{translations[language].beverages}</h2>
             <MenuSection 
-              title="Beverages" 
+              title={translations[language].beverages}
               items={menuData.beverages}
               searchQuery={searchQuery}
               onRatingClick={handleRatingClick}
@@ -150,7 +241,7 @@ const Index = () => {
         {/* Order Section */}
         {activeSection === 'order' && (
           <section id="order" className="menu-category">
-            <h2 id="orderNowButton">Order Now</h2>
+            <h2 id="orderNowButton">{translations[language].orderNow}</h2>
             <p>Start selecting food from our menu.</p>
           </section>
         )}
@@ -158,7 +249,7 @@ const Index = () => {
         {/* Catering Section */}
         {activeSection === 'catering' && (
           <section id="catering" className="menu-category">
-            <h2 id="cateringHeading">Catering</h2>
+            <h2 id="cateringHeading">{translations[language].catering}</h2>
             <p>Your catering order has been initiated.</p>
           </section>
         )}
@@ -166,7 +257,7 @@ const Index = () => {
         {/* Contact Section */}
         {activeSection === 'contact' && (
           <section id="contact" className="menu-category">
-            <h2 id="contactHeading">Contact</h2>
+            <h2 id="contactHeading">{translations[language].contact}</h2>
             <p>Follow us on:</p>
             <ul className="flex justify-center space-x-4 mt-2">
               <li><a href="#" className="text-blue-500 hover:text-blue-700">Facebook</a></li>

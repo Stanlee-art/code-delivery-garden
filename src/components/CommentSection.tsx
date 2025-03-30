@@ -37,6 +37,13 @@ export const CommentSection: React.FC = () => {
     setNewComment('');
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
     <section className="comment-section mt-12 border-t pt-8">
       <h2 className="text-2xl font-bold mb-4">Customer Comments</h2>
@@ -45,6 +52,7 @@ export const CommentSection: React.FC = () => {
           id="commentBox"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
+          onKeyPress={handleKeyPress}
           placeholder="Leave your comment..."
           className="w-full p-3 border rounded-md focus:ring-2 focus:outline-none"
           rows={3}

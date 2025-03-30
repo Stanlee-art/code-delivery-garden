@@ -2,6 +2,7 @@
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Moon, Sun, Menu } from 'lucide-react';
+import { SupportedLanguage } from '@/utils/translations';
 
 interface HeaderProps {
   isDarkMode: boolean;
