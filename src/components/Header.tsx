@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   toggleMobileMenu
 }) => {
   return (
-    <header className="flex flex-col md:flex-row md:items-center md:space-x-4 p-4 md:p-5">
+    <header className="flex flex-col md:flex-row md:items-center md:space-x-4 p-4 md:p-5 bg-[#684b2c] text-white">
       <div className="flex items-center justify-between w-full md:w-auto">
         {isMobile && (
           <button 
@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Menu size={24} />
           </button>
         )}
-        <div className="logo text-2xl font-bold">Damone~</div>
+        <div className="logo text-2xl font-bold text-white">Damone~</div>
         
         {/* Mobile search */}
         {isMobile && (
@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="darkModeToggle"
               onClick={toggleDarkMode}
-              className="p-2 rounded-full"
+              className="p-2 rounded-full bg-white text-[#684b2c] dark:bg-[#3a3a3a] dark:text-white"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="darkModeToggle"
             onClick={toggleDarkMode}
-            className="p-2 rounded-full"
+            className="p-2 rounded-full bg-white text-[#684b2c] dark:bg-[#3a3a3a] dark:text-white"
             aria-label="Toggle dark mode"
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}

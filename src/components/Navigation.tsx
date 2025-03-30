@@ -35,7 +35,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             <li key={item.id}>
               <button
                 onClick={() => handleSectionChange(item.id)}
-                className={`nav-btn hover:text-[#ffcc00] ${activeSection === item.id ? 'active-header' : ''}`}
+                className={`nav-btn text-white hover:text-[#ffcc00] ${activeSection === item.id ? 'active-header' : ''}`}
                 data-section={item.id}
               >
                 {item.label}
@@ -55,7 +55,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           <li key={item.id}>
             <button
               onClick={() => handleSectionChange(item.id)}
-              className={`nav-btn hover:text-[#ffcc00] font-bold ${activeSection === item.id ? 'active-header' : ''}`}
+              className={`nav-btn text-white hover:text-[#ffcc00] font-bold ${activeSection === item.id ? 'active-header' : ''}`}
               data-section={item.id}
             >
               {item.label}
