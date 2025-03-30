@@ -58,7 +58,8 @@ const Index = () => {
   // Change language
   const changeLanguage = (lang: SupportedLanguage) => {
     setLanguage(lang);
-    showNotification(`Language changed to ${lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Swahili'}`);
+    const langName = lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Swahili';
+    showNotification(`Language changed to ${langName}`);
   };
 
   // Show notification
@@ -127,7 +128,7 @@ const Index = () => {
         isDarkMode={isDarkMode} 
         toggleDarkMode={toggleDarkMode} 
         language={language} 
-        changeLanguage={(lang) => changeLanguage(lang as SupportedLanguage)}
+        changeLanguage={changeLanguage}
         searchQuery={searchQuery}
         handleSearch={handleSearch}
         isMobile={isMobile}
@@ -140,6 +141,7 @@ const Index = () => {
           handleSectionChange={handleSectionChange}
           isMobile={isMobile}
           isOpen={mobileMenuOpen}
+          language={language}
         />
         
         {/* Food Section */}
