@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,5 +98,473 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* General Page Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f5f2;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body img {
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #2c2c2c;
+  color: white;
+}
+
+/* Header Styling */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #684b2c;
+  padding: 15px 20px;
+  color: white;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+/* Fix Navigation Button Styling */
+nav ul li button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+nav ul li button:hover {
+  text-decoration: underline;
+}
+
+/* Dark Mode Button */
+#darkModeToggle {
+  background-color: white;
+  color: #684b2c;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.dark-mode #darkModeToggle {
+  background-color: #333;
+  color: white;
+}
+
+.notification {
+  position: fixed;
+  top: -50px; /* Initially hidden above the screen */
+  left: 50%;
+  transform: translateX(-50%); /* Center it horizontally */
+  background-color: #333;
+  color: white;
+  padding: 15px 30px; /* Increased padding for a bigger look */
+  border-radius: 8px;
+  font-size: 16px; /* Bigger text */
+  font-weight: bold; /* Make text stand out */
+  z-index: 1000;
+  opacity: 0;
+  transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Show notification */
+.show {
+  top: 20px; /* Slides down to this position */
+  opacity: 0.9;
+}
+
+/* Menu Category */
+.menu-category {
+  background-color: #a77e58;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 800px;
+  border-radius: 8px;
+}
+
+.dark-mode .menu-category {
+  background-color: #574d41;
+}
+
+/* Menu Items */
+.menu-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.menu-item {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px;
+  text-align: center;
+  width: 200px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, color 0.3s, background-color 0.3s;
+  color: #333;
+}
+
+/* Image Styling - Ensures images fit properly */
+.menu-item img {
+  width: 100%; /* Adjust image size */
+  height: 150px; /* Uniform height */
+  object-fit: cover; /* Prevents stretching */
+  border-radius: 8px;
+}
+
+.menu-item:hover {
+  transform: scale(1.05);
+}
+
+/* Ingredient Description */
+.menu-item p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.menu-item .description {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* ⭐ Star Rating System */
+.rating {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.rating span {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ccc; /* Default gray */
+  transition: color 0.3s, transform 0.2s;
+}
+
+/* Highlight stars on hover */
+.rating span:hover,
+.rating span:hover ~ span {
+  color: #ffcc00;
+  transform: scale(1.2);
+}
+
+/* Highlight selected stars */
+.rating.selected span {
+  color: #ffcc00;
+}
+
+.rating.selected span:hover,
+.rating.selected span:hover ~ span {
+  color: #ffcc00;
+}
+
+/* ⭐ Dark Mode Support */
+.dark-mode .rating span {
+  color: #666; /* Default gray in dark mode */
+}
+
+.dark-mode .rating span:hover,
+.dark-mode .rating span:hover ~ span,
+.dark-mode .rating.selected span {
+  color: #ffcc00;
+}
+
+/* Dark Mode Fix for Menu Items */
+.dark-mode .menu-item {
+  background: #3a3a3a;
+  color: white;
+}
+
+.dark-mode .menu-item span {
+  color: #ffcc00;
+}
+
+.dark-mode .menu-item .description {
+  color: #bbb;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* QR Code Section */
+.qr-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.qr-section img {
+  width: 150px;
+  height: auto;
+}
+
+/* Hover and click effect for headers */
+.menu-category h1, .menu-category h2, #order h2, #catering h2, #contact h2 {
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, transform 0.2s;
+}
+
+.menu-category h1:hover, .menu-category h2:hover,
+#order h2:hover, #catering h2:hover, #contact h2:hover {
+  color: #ffcc00; /* Gold color for highlight */
+  transform: scale(1.1);
+}
+
+/* Active Section Effect */
+.active-header {
+  color: #ffcc00; 
+  text-shadow: 0px 0px 10px rgba(255, 204, 0, 0.8);
+}
+
+/* ===== Enhanced Styling for the Category Selection Popup ===== */
+#categoryPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(248, 245, 242, 0.85); /* Slight transparency */
+  color: #684b2c; /* Dark brown text */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
+  width: 300px;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s;
+  backdrop-filter: blur(10px); /* Stronger frosted glass effect */
+}
+
+/* Dark Mode Support */
+.dark-mode #categoryPopup {
+  background: rgba(44, 44, 44, 0.85); /* Darker translucent effect */
+  color: white;
+}
+
+/* Stylish buttons */
+#categoryPopup button {
+  background: #684b2c; /* Matches header */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
+}
+
+/* Hover effect */
+#categoryPopup button:hover {
+  background: #a77e58; /* Lighter brown */
+  transform: scale(1.05);
+}
+
+/* Cancel button - Soft Brown */
+#categoryPopup #cancelBtn {
+  background: #a77e58; /* Soft brown */
+}
+
+#categoryPopup #cancelBtn:hover {
+  background: #574d41; /* Darker brown on hover */
+}
+
+/* Dark Mode Buttons */
+.dark-mode #categoryPopup button {
+  background: #3a3a3a;
+  color: #ffcc00;
+}
+
+.dark-mode #categoryPopup button:hover {
+  background: #ffcc00;
+  color: #333;
+}
+
+.dark-mode #categoryPopup #cancelBtn {
+  background: #a77e58; /* Keep soft brown */
+}
+
+.dark-mode #categoryPopup #cancelBtn:hover {
+  background: #574d41;
+}
+
+/* ===== Blur effect on background when popup appears ===== */
+.blur-active body {
+  filter: blur(5px); /* Blurs everything except popup */
+  pointer-events: none; /* Prevents clicking outside */
+}
+
+.blur-active #categoryPopup {
+  filter: none; /* Ensures popup remains clear */
+  pointer-events: auto;
+}
+
+/* Rating Submission Popup Styling */
+#ratingPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(248, 245, 242, 0.95); /* Light mode background */
+  color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
+  display: none; /* Initially hidden */
+}
+
+.dark-mode #ratingPopup {
+  background: rgba(44, 44, 44, 0.95); /* Darker translucent effect */
+  color: white;
+}
+
+/* Popup Buttons */
+#ratingPopup button {
+  background: #684b2c; /* Matches theme */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
+}
+
+#ratingPopup button:hover {
+  background: #a77e58;
+  transform: scale(1.05);
+}
+
+/* Cancel button */
+#ratingPopup #closePopup {
+  background: red;
+}
+
+#ratingPopup #closePopup:hover {
+  background: darkred;
+}
+
+/* Show popup */
+.show-popup {
+  display: block !important;
+}
+
+/* Default styles for large screens */
+body {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* 🌍 Universal Styles */
+* {
+  box-sizing: border-box;
+}
+
+/* 📱 Mobile Navigation */
+#menuToggle {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; /* Hidden by default on desktop */
+  color: white;
+  padding: 10px;
+}
+
+/* Hide nav by default on mobile */
+@media (max-width: 768px) {
+  #menuToggle {
+    display: block;
+  }
+
+  nav ul {
+    display: none; /* Hide the menu initially */
+    flex-direction: column;
+    background: #684b2c;
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 200px;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 1000;
+  }
+
+  /* Show menu when activated */
+  nav.show ul {
+    display: flex;
+  }
+
+  nav ul li {
+    margin: 10px 0;
+  }
+}
+
+/* 📱 Responsive Menu Layout */
+@media (max-width: 768px) {
+  .menu-items {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .menu-item {
+    width: 90%; /* Make menu items full width */
+  }
+}
+
+/* 🖥️ Tablets & Small Laptops */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .menu-container {
+    flex-wrap: wrap; /* Allow flexible wrapping */
+    justify-content: center;
+  }
+}
+
+/* 📱 Adjust Font Size for Readability */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1, h2 {
+    font-size: 18px;
   }
 }

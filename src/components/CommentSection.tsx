@@ -38,34 +38,35 @@ export const CommentSection: React.FC = () => {
   };
 
   return (
-    <section className="mt-12 border-t pt-8">
+    <section className="comment-section mt-12 border-t pt-8">
       <h2 className="text-2xl font-bold mb-4">Customer Comments</h2>
       <div className="mb-4">
         <textarea
+          id="commentBox"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Leave your comment..."
-          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary/50 focus:outline-none"
+          className="w-full p-3 border rounded-md focus:ring-2 focus:outline-none"
           rows={3}
         />
         <button 
           onClick={handleSubmit}
-          className="mt-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+          className="mt-2 bg-[#684b2c] text-white px-4 py-2 rounded-md hover:bg-[#a77e58] transition-colors"
         >
           Submit
         </button>
       </div>
       
-      <div className="space-y-4 mt-6">
+      <div className="space-y-4 mt-6" id="commentsList">
         {comments.length > 0 ? (
           comments.map(comment => (
-            <div key={comment.id} className="bg-card p-4 rounded-md shadow">
+            <div key={comment.id} className="bg-white dark:bg-[#3a3a3a] p-4 rounded-md shadow">
               <p className="mb-2">{comment.text}</p>
-              <p className="text-sm text-muted-foreground">Posted on {comment.date}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Posted on {comment.date}</p>
             </div>
           ))
         ) : (
-          <p className="text-muted-foreground italic">Be the first to leave a comment!</p>
+          <p className="text-gray-500 dark:text-gray-400 italic">Be the first to leave a comment!</p>
         )}
       </div>
     </section>

@@ -25,47 +25,52 @@ export const Header: React.FC<HeaderProps> = ({
   toggleMobileMenu
 }) => {
   return (
-    <header className="bg-primary text-primary-foreground p-4 sticky top-0 z-10 shadow-md">
-      <div className="container mx-auto flex flex-wrap items-center justify-between">
-        <div className="flex items-center space-x-4">
-          {isMobile && (
-            <button 
-              onClick={toggleMobileMenu}
-              className="text-primary-foreground hover:text-opacity-80"
-            >
-              <Menu size={24} />
-            </button>
-          )}
-          <div className="text-2xl font-bold">Damone~</div>
-        </div>
-        
-        <div className="flex items-center space-x-4 mt-2 md:mt-0">
-          <Input
-            type="text"
-            placeholder="Search menu..."
-            value={searchQuery}
-            onChange={handleSearch}
-            className="w-36 md:w-60 bg-primary-foreground text-primary"
-          />
-          
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full hover:bg-opacity-20 hover:bg-primary-foreground transition-colors"
+    <header>
+      <div className="flex items-center space-x-4">
+        {isMobile && (
+          <button 
+            id="menuToggle"
+            onClick={toggleMobileMenu}
+            className="text-white hover:text-opacity-80"
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            <Menu size={24} />
           </button>
-          
-          <select
-            value={language}
-            onChange={(e) => changeLanguage(e.target.value)}
-            className="bg-primary text-primary-foreground border border-primary-foreground rounded p-1"
-          >
-            <option value="en">English</option>
-            <option value="sw">Swahili</option>
-            <option value="fr">French</option>
-          </select>
-        </div>
+        )}
+        <div className="logo">Damone~</div>
       </div>
+      
+      <div className="flex items-center space-x-4 mt-2 md:mt-0">
+        <Input
+          type="text"
+          id="searchBar"
+          placeholder="Search menu..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="w-36 md:w-60 bg-white text-[#684b2c]"
+        />
+        
+        <button
+          id="darkModeToggle"
+          onClick={toggleDarkMode}
+          className="p-2 rounded-full"
+        >
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+        
+        <select
+          id="languageSelect"
+          value={language}
+          onChange={(e) => changeLanguage(e.target.value)}
+          className="bg-white text-[#684b2c] border border-[#684b2c] rounded p-1"
+        >
+          <option value="en">English</option>
+          <option value="sw">Swahili</option>
+          <option value="fr">French</option>
+        </select>
+      </div>
+      
+      {/* Notification Box */}
+      <div id="notificationBox" className="notification hidden"></div>
     </header>
   );
 };

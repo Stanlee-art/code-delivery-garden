@@ -1,8 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MenuSection } from '@/components/MenuSection';
 import { Navigation } from '@/components/Navigation';
@@ -25,7 +22,7 @@ const Index = () => {
   // Toggle dark mode
   const toggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
-    document.documentElement.classList.toggle('dark');
+    document.body.classList.toggle('dark-mode');
   };
 
   // Change language
@@ -61,131 +58,137 @@ const Index = () => {
     setShowRatingPopup(false);
     
     // Show a notification
-    const notificationElement = document.createElement('div');
-    notificationElement.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50';
-    notificationElement.textContent = 'Ratings submitted successfully!';
-    document.body.appendChild(notificationElement);
-    
-    setTimeout(() => {
-      document.body.removeChild(notificationElement);
-    }, 3000);
+    const notificationElement = document.getElementById('notificationBox');
+    if (notificationElement) {
+      notificationElement.textContent = 'Ratings submitted successfully!';
+      notificationElement.classList.remove('hidden');
+      notificationElement.classList.add('show');
+      
+      setTimeout(() => {
+        notificationElement.classList.remove('show');
+        notificationElement.classList.add('hidden');
+      }, 3000);
+    }
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'dark' : ''}`}>
-      <div className="bg-background text-foreground min-h-screen">
-        <Header 
-          isDarkMode={isDarkMode} 
-          toggleDarkMode={toggleDarkMode} 
-          language={language} 
-          changeLanguage={changeLanguage}
-          searchQuery={searchQuery}
-          handleSearch={handleSearch}
+    <div className={isDarkMode ? 'dark-mode' : ''}>
+      <Header 
+        isDarkMode={isDarkMode} 
+        toggleDarkMode={toggleDarkMode} 
+        language={language} 
+        changeLanguage={changeLanguage}
+        searchQuery={searchQuery}
+        handleSearch={handleSearch}
+        isMobile={isMobile}
+        toggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+      />
+      
+      <main>
+        <Navigation 
+          activeSection={activeSection} 
+          handleSectionChange={handleSectionChange}
           isMobile={isMobile}
-          toggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+          isOpen={mobileMenuOpen}
         />
         
-        <main className="container mx-auto px-4 py-8">
-          <Navigation 
-            activeSection={activeSection} 
-            handleSectionChange={handleSectionChange}
-            isMobile={isMobile}
-            isOpen={mobileMenuOpen}
-          />
-          
-          {/* Food Section */}
-          {activeSection === 'food' && (
-            <div className="mt-8">
-              <h1 className="text-3xl font-bold mb-6">Food</h1>
-              
+        {/* Food Section */}
+        {activeSection === 'food' && (
+          <section id="food" className="menu-category">
+            <h1 id="foodHeading">Food</h1>
+            <div id="menuCategories">
               {/* Appetizers */}
-              <MenuSection 
-                title="Appetizers" 
-                items={menuData.appetizers}
-                searchQuery={searchQuery}
-                onRatingClick={handleRatingClick}
-                selectedRatings={selectedRatings}
-              />
+              <section id="appetizersSection">
+                <MenuSection 
+                  title="Appetizers" 
+                  items={menuData.appetizers}
+                  searchQuery={searchQuery}
+                  onRatingClick={handleRatingClick}
+                  selectedRatings={selectedRatings}
+                />
+              </section>
               
               {/* Main Course */}
-              <MenuSection 
-                title="Main Course" 
-                items={menuData.mainCourse}
-                searchQuery={searchQuery}
-                onRatingClick={handleRatingClick}
-                selectedRatings={selectedRatings}
-              />
+              <section id="mainCourseSection">
+                <MenuSection 
+                  title="Main Course" 
+                  items={menuData.mainCourse}
+                  searchQuery={searchQuery}
+                  onRatingClick={handleRatingClick}
+                  selectedRatings={selectedRatings}
+                />
+              </section>
               
               {/* Desserts */}
-              <MenuSection 
-                title="Desserts" 
-                items={menuData.desserts}
-                searchQuery={searchQuery}
-                onRatingClick={handleRatingClick}
-                selectedRatings={selectedRatings}
-              />
+              <section id="dessertsSection">
+                <MenuSection 
+                  title="Desserts" 
+                  items={menuData.desserts}
+                  searchQuery={searchQuery}
+                  onRatingClick={handleRatingClick}
+                  selectedRatings={selectedRatings}
+                />
+              </section>
             </div>
-          )}
-          
-          {/* Beverages Section */}
-          {activeSection === 'beverages' && (
-            <div className="mt-8">
-              <h1 className="text-3xl font-bold mb-6">Beverages</h1>
-              <MenuSection 
-                title="Beverages" 
-                items={menuData.beverages}
-                searchQuery={searchQuery}
-                onRatingClick={handleRatingClick}
-                selectedRatings={selectedRatings}
-              />
-            </div>
-          )}
-          
-          {/* Order Section */}
-          {activeSection === 'order' && (
-            <div className="mt-8">
-              <h1 className="text-3xl font-bold mb-6">Order Now</h1>
-              <p className="text-lg">Start selecting food from our menu.</p>
-              {/* Add order form here in a real application */}
-            </div>
-          )}
-          
-          {/* Catering Section */}
-          {activeSection === 'catering' && (
-            <div className="mt-8">
-              <h1 className="text-3xl font-bold mb-6">Catering</h1>
-              <p className="text-lg">Your catering order has been initiated.</p>
-              {/* Add catering form here in a real application */}
-            </div>
-          )}
-          
-          {/* Contact Section */}
-          {activeSection === 'contact' && (
-            <div className="mt-8">
-              <h1 className="text-3xl font-bold mb-6">Contact</h1>
-              <p className="text-lg">Follow us on:</p>
-              <ul className="flex space-x-4 mt-2">
-                <li><a href="#" className="text-blue-500 hover:text-blue-700">Facebook</a></li>
-                <li><a href="#" className="text-pink-500 hover:text-pink-700">Instagram</a></li>
-                <li><a href="#" className="text-sky-500 hover:text-sky-700">Twitter</a></li>
-              </ul>
-            </div>
-          )}
-          
-          {/* Comment Section - Always visible */}
-          <CommentSection />
-          
-          {/* QR Code Section - Always visible */}
-          <QRSection />
-        </main>
+          </section>
+        )}
         
-        {/* Rating Popup */}
-        <RatingPopup 
-          isOpen={showRatingPopup} 
-          onClose={() => setShowRatingPopup(false)}
-          onSubmit={handleRatingSubmit}
-        />
-      </div>
+        {/* Beverages Section */}
+        {activeSection === 'beverages' && (
+          <section id="beverages" className="menu-category">
+            <h2 id="beveragesHeading">Beverages</h2>
+            <MenuSection 
+              title="Beverages" 
+              items={menuData.beverages}
+              searchQuery={searchQuery}
+              onRatingClick={handleRatingClick}
+              selectedRatings={selectedRatings}
+            />
+          </section>
+        )}
+        
+        {/* Order Section */}
+        {activeSection === 'order' && (
+          <section id="order" className="menu-category">
+            <h2 id="orderNowButton">Order Now</h2>
+            <p>Start selecting food from our menu.</p>
+          </section>
+        )}
+        
+        {/* Catering Section */}
+        {activeSection === 'catering' && (
+          <section id="catering" className="menu-category">
+            <h2 id="cateringHeading">Catering</h2>
+            <p>Your catering order has been initiated.</p>
+          </section>
+        )}
+        
+        {/* Contact Section */}
+        {activeSection === 'contact' && (
+          <section id="contact" className="menu-category">
+            <h2 id="contactHeading">Contact</h2>
+            <p>Follow us on:</p>
+            <ul className="flex justify-center space-x-4 mt-2">
+              <li><a href="#" className="text-blue-500 hover:text-blue-700">Facebook</a></li>
+              <li><a href="#" className="text-pink-500 hover:text-pink-700">Instagram</a></li>
+              <li><a href="#" className="text-sky-500 hover:text-sky-700">Twitter</a></li>
+            </ul>
+          </section>
+        )}
+        
+        {/* Comment Section - Always visible */}
+        <CommentSection />
+        
+        {/* QR Code Section - Always visible */}
+        <QRSection />
+      </main>
+      
+      {/* Rating Popup */}
+      <RatingPopup 
+        isOpen={showRatingPopup} 
+        onClose={() => setShowRatingPopup(false)}
+        onSubmit={handleRatingSubmit}
+      />
     </div>
   );
 };
