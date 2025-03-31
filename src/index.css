@@ -259,7 +259,7 @@ nav ul li button:hover {
 
 /* Image Styling - Ensures images fit properly and are ready for manual replacement */
 .menu-item img {
-  width: 100%; /* Adjust image size */
+  width: 100; /* Adjust image size */
   height: 150px; /* Uniform height */
   object-fit: cover; /* Prevents stretching */
   border-radius: 8px;
