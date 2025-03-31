@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Textarea } from './ui/textarea';
 
 interface CateringReview {
   id: number;
@@ -72,11 +73,11 @@ export const CateringSection: React.FC = () => {
           </div>
         </div>
         
-        <textarea
+        <Textarea
           value={newReview}
           onChange={(e) => setNewReview(e.target.value)}
           placeholder="Share your experience with our catering service..."
-          className="w-full p-3 border rounded-md focus:ring-2 focus:outline-none"
+          className="w-full p-3 border rounded-md focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
           rows={3}
         />
         

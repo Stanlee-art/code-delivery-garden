@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Textarea } from './ui/textarea';
 
 interface Comment {
   id: number;
@@ -48,13 +49,13 @@ export const CommentSection: React.FC = () => {
     <section className="comment-section mt-12 border-t pt-8">
       <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">Customer Comments</h2>
       <div className="mb-4">
-        <textarea
+        <Textarea
           id="commentBox"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           placeholder="Leave your comment..."
-          className="w-full p-3 border rounded-md focus:ring-2 focus:outline-none"
+          className="w-full p-3 border rounded-md focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
           rows={3}
         />
         <button 
