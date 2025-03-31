@@ -2,6 +2,8 @@
 import React from 'react';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { MenuItemType } from '@/types/menu';
+import { useOrder } from '@/contexts/OrderContext';
+import { translations } from '@/utils/translations';
 
 interface MenuSectionProps {
   title: string;
@@ -18,6 +20,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
   onRatingClick,
   selectedRatings
 }) => {
+  const { addToOrder, language } = useOrder();
+  
   // Filter items based on search query
   const filteredItems = searchQuery 
     ? items.filter(item => 
@@ -41,6 +45,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
               <img 
                 src={item.image} 
                 alt={item.name}
+                className={`menu-img-${item.id.toLowerCase().replace(/ /g, '-')}`}
               />
             )}
             <p>{item.name}</p>
@@ -64,6 +69,14 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                 </span>
               ))}
             </div>
+            
+            {/* Add to Order button */}
+            <button 
+              className="mt-2 bg-[#684b2c] hover:bg-[#a77e58] text-white px-2 py-1 rounded text-sm transition-colors"
+              onClick={() => addToOrder(item)}
+            >
+              {translations[language].addToOrder}
+            </button>
           </div>
         ))}
       </div>
