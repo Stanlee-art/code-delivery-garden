@@ -1,3 +1,4 @@
+
 export type SupportedLanguage = 'en' | 'fr' | 'sw';
 
 export const translations = {
@@ -25,7 +26,11 @@ export const translations = {
     enjoyYourMeal: 'We hope you enjoy your meal!',
     noItemsInOrder: 'No items in your order yet.',
     itemAdded: 'Item Added',
-    addedToOrder: 'added to your order'
+    addedToOrder: 'added to your order',
+    
+    // QR Code related
+    scanToViewMenu: 'Scan to View Menu',
+    qrCodePlaceholder: 'QR Code Placeholder'
   },
   fr: {
     food: 'Nourriture',
@@ -51,7 +56,11 @@ export const translations = {
     enjoyYourMeal: 'Nous espérons que vous apprécierez votre repas!',
     noItemsInOrder: 'Aucun article dans votre commande pour le moment.',
     itemAdded: 'Article Ajouté',
-    addedToOrder: 'ajouté à votre commande'
+    addedToOrder: 'ajouté à votre commande',
+    
+    // QR Code related
+    scanToViewMenu: 'Scannez pour Voir le Menu',
+    qrCodePlaceholder: 'Emplacement du Code QR'
   },
   sw: {
     food: 'Chakula',
@@ -77,6 +86,10 @@ export const translations = {
     enjoyYourMeal: 'Tunatumai utafurahia mlo wako!',
     noItemsInOrder: 'Hakuna vitu kwenye oda yako bado.',
     itemAdded: 'Bidhaa Imeongezwa',
-    addedToOrder: 'imeongezwa kwenye oda yako'
+    addedToOrder: 'imeongezwa kwenye oda yako',
+    
+    // QR Code related
+    scanToViewMenu: 'Skani Kuona Menyu',
+    qrCodePlaceholder: 'Nafasi ya Msimbo wa QR'
   }
 };

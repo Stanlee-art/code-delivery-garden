@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MenuSection } from '@/components/MenuSection';
@@ -12,6 +11,7 @@ import { OrderProvider, useOrder } from '@/contexts/OrderContext';
 import { menuData } from '@/data/menuData';
 import { translations, SupportedLanguage } from '@/utils/translations';
 import { Toaster } from '@/components/ui/toaster';
+import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 const OrderButton = () => {
   const { totalItems, setShowOrderSummary, language } = useOrder();
@@ -48,7 +48,6 @@ const MenuContent = ({
   
   return (
     <>
-      {/* Food Section */}
       {activeSection === 'food' && (
         <section id="food" className="menu-category">
           <h1 
@@ -59,7 +58,6 @@ const MenuContent = ({
             {translations[language].food}
           </h1>
           
-          {/* Category Popup */}
           {showCategoryPopup && (
             <div id="categoryPopup" className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-5 rounded-lg shadow-lg z-50 w-80">
               <p className="font-bold mb-4">Choose a category:</p>
@@ -94,7 +92,6 @@ const MenuContent = ({
           )}
           
           <div id="menuCategories">
-            {/* Appetizers */}
             <section id="appetizersSection">
               <MenuSection 
                 title={translations[language].appetizers}
@@ -105,7 +102,6 @@ const MenuContent = ({
               />
             </section>
             
-            {/* Main Course */}
             <section id="mainCourseSection">
               <MenuSection 
                 title={translations[language].mainCourse}
@@ -116,7 +112,6 @@ const MenuContent = ({
               />
             </section>
             
-            {/* Desserts */}
             <section id="dessertsSection">
               <MenuSection 
                 title={translations[language].desserts}
@@ -130,7 +125,6 @@ const MenuContent = ({
         </section>
       )}
       
-      {/* Beverages Section */}
       {activeSection === 'beverages' && (
         <section id="beverages" className="menu-category">
           <h2 id="beveragesHeading" className="text-black dark:text-white">{translations[language].beverages}</h2>
@@ -144,7 +138,6 @@ const MenuContent = ({
         </section>
       )}
       
-      {/* Order Section */}
       {activeSection === 'order' && (
         <section id="order" className="menu-category">
           <h2 id="orderNowButton" className="text-black dark:text-white">{translations[language].orderNow}</h2>
@@ -198,7 +191,6 @@ const MenuContent = ({
         </section>
       )}
       
-      {/* Catering Section */}
       {activeSection === 'catering' && (
         <section id="catering" className="menu-category">
           <h2 id="cateringHeading" className="text-black dark:text-white">{translations[language].catering}</h2>
@@ -206,15 +198,44 @@ const MenuContent = ({
         </section>
       )}
       
-      {/* Contact Section */}
       {activeSection === 'contact' && (
         <section id="contact" className="menu-category">
           <h2 id="contactHeading" className="text-black dark:text-white">{translations[language].contact}</h2>
           <p>Follow us on:</p>
           <ul className="flex justify-center space-x-4 mt-2">
-            <li><a href="#" className="text-blue-500 hover:text-blue-700">Facebook</a></li>
-            <li><a href="#" className="text-pink-500 hover:text-pink-700">Instagram</a></li>
-            <li><a href="#" className="text-sky-500 hover:text-sky-700">Twitter</a></li>
+            <li>
+              <a 
+                href="https://facebook.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center text-blue-500 hover:text-blue-700 transition-colors"
+              >
+                <Facebook className="mr-1" />
+                Facebook
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center text-pink-500 hover:text-pink-700 transition-colors"
+              >
+                <Instagram className="mr-1" />
+                Instagram
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center text-sky-500 hover:text-sky-700 transition-colors"
+              >
+                <Twitter className="mr-1" />
+                Twitter
+              </a>
+            </li>
           </ul>
         </section>
       )}
@@ -233,7 +254,6 @@ const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
 
-  // Load dark mode preference from localStorage on component mount
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme === 'dark') {
@@ -241,7 +261,6 @@ const Index = () => {
       document.body.classList.add('dark-mode');
     }
 
-    // Load saved ratings
     const loadSavedRatings = () => {
       const savedRatings: Record<string, number> = {};
       Object.keys(localStorage).forEach(key => {
@@ -259,7 +278,6 @@ const Index = () => {
     loadSavedRatings();
   }, []);
 
-  // Toggle dark mode
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
@@ -267,14 +285,12 @@ const Index = () => {
     localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
 
-  // Change language
   const changeLanguage = (lang: SupportedLanguage) => {
     setLanguage(lang);
     const langName = lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Swahili';
     showNotification(`Language changed to ${langName}`);
   };
 
-  // Show notification
   const showNotification = (message: string) => {
     const notificationElement = document.getElementById('notificationBox');
     if (notificationElement) {
@@ -289,18 +305,15 @@ const Index = () => {
     }
   };
 
-  // Handle search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  // Handle section change
   const handleSectionChange = (section: string) => {
     setActiveSection(section);
     setMobileMenuOpen(false);
   };
 
-  // Handle rating click
   const handleRatingClick = (itemId: string, value: number) => {
     const newRatings = {
       ...selectedRatings,
@@ -312,20 +325,16 @@ const Index = () => {
     setShowRatingPopup(true);
   };
 
-  // Handle rating submission
   const handleRatingSubmit = () => {
-    // In a real application, this would submit ratings to a server
     console.log('Submitting ratings:', selectedRatings);
     setShowRatingPopup(false);
     showNotification('Ratings submitted successfully!');
   };
 
-  // Toggle food category popup
   const toggleCategoryPopup = () => {
     setShowCategoryPopup(!showCategoryPopup);
   };
 
-  // Handle category selection
   const handleCategorySelect = (category: string) => {
     const element = document.getElementById(category);
     if (element) {
@@ -367,20 +376,15 @@ const Index = () => {
             handleCategorySelect={handleCategorySelect}
           />
           
-          {/* Comment Section - Always visible */}
           <CommentSection />
           
-          {/* QR Code Section - Always visible */}
           <QRSection />
-
-          {/* Order button (floating) */}
+          
           <OrderButton />
           
-          {/* Order Summary Dialog */}
           <OrderSummary />
         </main>
         
-        {/* Rating Popup */}
         <RatingPopup 
           isOpen={showRatingPopup} 
           onClose={() => setShowRatingPopup(false)}
