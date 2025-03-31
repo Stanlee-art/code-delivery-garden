@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -152,10 +151,14 @@ nav ul li {
 nav ul li button {
   background: none;
   border: none;
-  color: white;
+  color: black; /* Default light mode color */
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
+}
+
+.dark-mode nav ul li button {
+  color: white; /* Dark mode color */
 }
 
 nav ul li button:hover {
@@ -203,7 +206,7 @@ nav ul li button:hover {
 /* Menu Category */
 .menu-category {
   background-color: #a77e58;
-  color: white;
+  color: #333; /* Changed to dark text for light mode */
   padding: 20px;
   text-align: center;
   margin: 20px auto;
@@ -213,9 +216,29 @@ nav ul li button:hover {
 
 .dark-mode .menu-category {
   background-color: #574d41;
+  color: white;
 }
 
-/* Menu Items */
+/* Section Headers */
+.menu-category h1, 
+.menu-category h2, 
+#order h2, 
+#catering h2, 
+#contact h2 {
+  color: black; /* Black for light mode */
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, transform 0.2s;
+}
+
+.dark-mode .menu-category h1,
+.dark-mode .menu-category h2,
+.dark-mode #order h2,
+.dark-mode #catering h2,
+.dark-mode #contact h2 {
+  color: white; /* White for dark mode */
+}
+
+/* Menu Items - Modified for easier custom image replacement */
 .menu-items {
   display: flex;
   flex-wrap: wrap;
@@ -234,11 +257,44 @@ nav ul li button:hover {
   color: #333;
 }
 
-/* Image Styling - Ensures images fit properly */
+/* Image Styling - Ensures images fit properly and are ready for manual replacement */
 .menu-item img {
   width: 100%; /* Adjust image size */
   height: 150px; /* Uniform height */
   object-fit: cover; /* Prevents stretching */
+  border-radius: 8px;
+}
+
+/* Added custom classes for manual image replacement */
+.menu-img-kebab,
+.menu-img-bhajia,
+.menu-img-garlic-bread,
+.menu-img-stuffed-mushrooms,
+.menu-img-mandazi,
+.menu-img-chicken-wings,
+.menu-img-nyama-choma,
+.menu-img-steak-and-fries,
+.menu-img-pasta-alfredo,
+.menu-img-chicken-parmesan,
+.menu-img-pilau,
+.menu-img-veggie-stir-fry,
+.menu-img-chocolate-cake,
+.menu-img-cheesecake,
+.menu-img-ice-cream-sundae,
+.menu-img-tiramisu,
+.menu-img-fruit-tart,
+.menu-img-pink-moscato,
+.menu-img-white-wine,
+.menu-img-red-wine,
+.menu-img-bellini-peach-tea,
+.menu-img-classic-lemonade,
+.menu-img-iced-tea,
+.menu-img-raspberry-lemonade,
+.menu-img-soft-drink {
+  /* These classes can be used in the HTML to target specific menu item images */
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   border-radius: 8px;
 }
 

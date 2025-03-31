@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MenuSection } from '@/components/MenuSection';
@@ -149,7 +150,7 @@ const Index = () => {
             <h1 
               id="foodHeading" 
               onClick={toggleCategoryPopup}
-              className={`cursor-pointer text-white ${showCategoryPopup ? 'active-header' : ''}`}
+              className={`cursor-pointer text-black dark:text-white ${showCategoryPopup ? 'active-header' : ''}`}
             >
               {translations[language].food}
             </h1>
@@ -228,7 +229,7 @@ const Index = () => {
         {/* Beverages Section */}
         {activeSection === 'beverages' && (
           <section id="beverages" className="menu-category">
-            <h2 id="beveragesHeading" className="text-white">{translations[language].beverages}</h2>
+            <h2 id="beveragesHeading" className="text-black dark:text-white">{translations[language].beverages}</h2>
             <MenuSection 
               title={translations[language].beverages}
               items={menuData.beverages}
@@ -242,7 +243,7 @@ const Index = () => {
         {/* Order Section */}
         {activeSection === 'order' && (
           <section id="order" className="menu-category">
-            <h2 id="orderNowButton" className="text-white">{translations[language].orderNow}</h2>
+            <h2 id="orderNowButton" className="text-black dark:text-white">{translations[language].orderNow}</h2>
             <p>Start selecting food from our menu.</p>
           </section>
         )}
@@ -250,7 +251,7 @@ const Index = () => {
         {/* Catering Section */}
         {activeSection === 'catering' && (
           <section id="catering" className="menu-category">
-            <h2 id="cateringHeading" className="text-white">{translations[language].catering}</h2>
+            <h2 id="cateringHeading" className="text-black dark:text-white">{translations[language].catering}</h2>
             <p>Your catering order has been initiated.</p>
           </section>
         )}
@@ -258,7 +259,7 @@ const Index = () => {
         {/* Contact Section */}
         {activeSection === 'contact' && (
           <section id="contact" className="menu-category">
-            <h2 id="contactHeading" className="text-white">{translations[language].contact}</h2>
+            <h2 id="contactHeading" className="text-black dark:text-white">{translations[language].contact}</h2>
             <p>Follow us on:</p>
             <ul className="flex justify-center space-x-4 mt-2">
               <li><a href="#" className="text-blue-500 hover:text-blue-700">Facebook</a></li>
