@@ -46,7 +46,7 @@ export const CommentSection: React.FC = () => {
 
   return (
     <section className="comment-section mt-12 border-t pt-8">
-      <h2 className="text-2xl font-bold mb-4">Customer Comments</h2>
+      <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">Customer Comments</h2>
       <div className="mb-4">
         <textarea
           id="commentBox"
@@ -69,7 +69,7 @@ export const CommentSection: React.FC = () => {
         {comments.length > 0 ? (
           comments.map(comment => (
             <div key={comment.id} className="bg-white dark:bg-[#3a3a3a] p-4 rounded-md shadow">
-              <p className="mb-2">{comment.text}</p>
+              <p className="mb-2 text-black dark:text-white">{comment.text}</p>
               <p className="text-sm text-gray-600 dark:text-gray-300">Posted on {comment.date}</p>
             </div>
           ))

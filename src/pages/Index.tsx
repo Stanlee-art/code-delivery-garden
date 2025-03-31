@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MenuSection } from '@/components/MenuSection';
 import { Navigation } from '@/components/Navigation';
 import { Header } from '@/components/Header';
 import { CommentSection } from '@/components/CommentSection';
+import { CateringSection } from '@/components/CateringSection';
 import { QRSection } from '@/components/QRSection';
 import { RatingPopup } from '@/components/RatingPopup';
 import { OrderSummary } from '@/components/OrderSummary';
@@ -194,7 +196,7 @@ const MenuContent = ({
       {activeSection === 'catering' && (
         <section id="catering" className="menu-category">
           <h2 id="cateringHeading" className="text-black dark:text-white">{translations[language].catering}</h2>
-          <p>Your catering order has been initiated.</p>
+          <CateringSection />
         </section>
       )}
       

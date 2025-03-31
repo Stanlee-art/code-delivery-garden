@@ -30,7 +30,15 @@ export const translations = {
     
     // QR Code related
     scanToViewMenu: 'Scan to View Menu',
-    qrCodePlaceholder: 'QR Code Placeholder'
+    qrCodePlaceholder: 'QR Code Placeholder',
+    
+    // Catering related
+    rateCatering: 'Rate Our Catering Service',
+    yourRating: 'Your Rating:',
+    cateringExperience: 'Share your experience with our catering service...',
+    submitReview: 'Submit Review',
+    customerReviews: 'Customer Reviews',
+    noCateringReviews: 'No catering reviews yet. Be the first to review our service!'
   },
   fr: {
     food: 'Nourriture',
@@ -60,7 +68,15 @@ export const translations = {
     
     // QR Code related
     scanToViewMenu: 'Scannez pour Voir le Menu',
-    qrCodePlaceholder: 'Emplacement du Code QR'
+    qrCodePlaceholder: 'Emplacement du Code QR',
+    
+    // Catering related
+    rateCatering: 'Évaluez Notre Service Traiteur',
+    yourRating: 'Votre Évaluation:',
+    cateringExperience: 'Partagez votre expérience avec notre service traiteur...',
+    submitReview: 'Soumettre l\'Avis',
+    customerReviews: 'Avis des Clients',
+    noCateringReviews: 'Pas encore d\'avis sur le service traiteur. Soyez le premier à évaluer notre service!'
   },
   sw: {
     food: 'Chakula',
@@ -90,6 +106,14 @@ export const translations = {
     
     // QR Code related
     scanToViewMenu: 'Skani Kuona Menyu',
-    qrCodePlaceholder: 'Nafasi ya Msimbo wa QR'
+    qrCodePlaceholder: 'Nafasi ya Msimbo wa QR',
+    
+    // Catering related
+    rateCatering: 'Tathmini Huduma Yetu ya Chakula',
+    yourRating: 'Tathmini Yako:',
+    cateringExperience: 'Shiriki uzoefu wako na huduma yetu ya chakula...',
+    submitReview: 'Wasilisha Maoni',
+    customerReviews: 'Maoni ya Wateja',
+    noCateringReviews: 'Hakuna maoni ya huduma ya chakula bado. Kuwa wa kwanza kutathmini huduma yetu!'
   }
 };
