@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { translations, SupportedLanguage } from '@/utils/translations';
+import { SupportedLanguage, translations } from '@/utils/translations';
+import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 interface NavigationProps {
   activeSection: string;
@@ -17,48 +18,42 @@ export const Navigation: React.FC<NavigationProps> = ({
   isOpen,
   language
 }) => {
-  // Define navigation items using the translations
   const navItems = [
-    { id: 'food', label: translations[language].food },
-    { id: 'beverages', label: translations[language].beverages },
-    { id: 'order', label: translations[language].orderNow },
-    { id: 'catering', label: translations[language].catering },
-    { id: 'contact', label: translations[language].contact }
+    { id: 'food', name: translations[language].food },
+    { id: 'beverages', name: translations[language].beverages },
+    { id: 'order', name: translations[language].orderNow },
+    { id: 'catering', name: translations[language].catering },
+    { id: 'contact', name: translations[language].contact },
   ];
 
-  // Mobile navigation
-  if (isMobile) {
-    return (
-      <nav className={`${isOpen ? 'show' : ''}`} id="navMenu">
-        <ul className="bg-[#684b2c] dark:bg-[#574d41] shadow-lg">
-          {navItems.map((item) => (
-            <li key={item.id}>
-              <button
-                onClick={() => handleSectionChange(item.id)}
-                className={`nav-btn text-white dark:text-white hover:text-[#ffcc00] ${activeSection === item.id ? 'active-header' : ''}`}
-                data-section={item.id}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    );
-  }
+  const navClass = isMobile
+    ? `fixed top-[60px] left-0 w-full bg-white dark:bg-[#222] shadow-md z-40 transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      }`
+    : 'sticky top-0 bg-white dark:bg-[#222] shadow-md z-30';
 
-  // Desktop navigation
   return (
-    <nav id="navMenu">
-      <ul>
+    <nav className={navClass}>
+      <ul className={`flex ${isMobile ? 'flex-col' : 'flex-row justify-center'} p-0 m-0`}>
         {navItems.map((item) => (
-          <li key={item.id}>
+          <li key={item.id} className="list-none">
             <button
+              id={`nav-${item.id}`}
+              className={`px-4 py-2 text-lg ${
+                activeSection === item.id
+                  ? 'text-[#684b2c] dark:text-[#a77e58] font-bold border-b-2 border-[#684b2c] dark:border-[#a77e58]'
+                  : 'text-black dark:text-white hover:text-[#684b2c] dark:hover:text-[#a77e58]'
+              } ${isMobile ? 'block w-full text-left border-b border-gray-200 dark:border-gray-700' : ''}`}
               onClick={() => handleSectionChange(item.id)}
-              className={`nav-btn text-black dark:text-white hover:text-[#ffcc00] font-bold ${activeSection === item.id ? 'active-header' : ''}`}
-              data-section={item.id}
             >
-              {item.label}
+              {item.name}
+              {item.id === 'contact' && (
+                <span className="ml-2 inline-flex space-x-1">
+                  <Facebook size={16} />
+                  <Instagram size={16} />
+                  <Twitter size={16} />
+                </span>
+              )}
             </button>
           </li>
         ))}

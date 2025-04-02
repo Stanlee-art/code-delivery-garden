@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MenuSection } from '@/components/MenuSection';
@@ -9,6 +8,7 @@ import { CateringSection } from '@/components/CateringSection';
 import { QRSection } from '@/components/QRSection';
 import { RatingPopup } from '@/components/RatingPopup';
 import { OrderSummary } from '@/components/OrderSummary';
+import { SocialMediaIntegration } from '@/components/SocialMediaIntegration';
 import { OrderProvider, useOrder } from '@/contexts/OrderContext';
 import { menuData } from '@/data/menuData';
 import { translations, SupportedLanguage } from '@/utils/translations';
@@ -377,6 +377,8 @@ const Index = () => {
             setShowCategoryPopup={setShowCategoryPopup}
             handleCategorySelect={handleCategorySelect}
           />
+          
+          {activeSection === 'contact' && <SocialMediaIntegration />}
           
           <CommentSection />
           
