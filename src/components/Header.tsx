@@ -25,6 +25,9 @@ export const Header: React.FC<HeaderProps> = ({
   isMobile,
   toggleMobileMenu
 }) => {
+  // Using the same brown color from the image for consistency
+  const headerBgColor = '#684b2c';
+  
   return (
     <header className="flex flex-col md:flex-row md:items-center md:space-x-4 p-4 md:p-5 bg-[#684b2c] text-white">
       <div className="flex items-center justify-between w-full md:w-auto">
