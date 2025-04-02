@@ -6,17 +6,20 @@ interface Comment {
   id: number;
   text: string;
   date: string;
+  timestamp: number; // Adding timestamp for auto-hiding functionality
 }
 
 export const CommentSection: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [visibleComments, setVisibleComments] = useState<Comment[]>([]);
 
   // Load comments from localStorage on component mount
   useEffect(() => {
     const savedComments = localStorage.getItem('damoneComments');
     if (savedComments) {
-      setComments(JSON.parse(savedComments));
+      const parsedComments = JSON.parse(savedComments);
+      setComments(parsedComments);
     }
   }, []);
 
@@ -25,13 +28,42 @@ export const CommentSection: React.FC = () => {
     localStorage.setItem('damoneComments', JSON.stringify(comments));
   }, [comments]);
 
+  // Update visible comments when comments change
+  useEffect(() => {
+    // Filter out comments older than 2 minutes
+    const currentTime = Date.now();
+    const twoMinutesAgo = currentTime - 2 * 60 * 1000;
+    
+    const recentComments = comments.filter(comment => 
+      comment.timestamp && comment.timestamp > twoMinutesAgo
+    );
+    
+    // Only show the 3 most recent comments
+    setVisibleComments(recentComments.slice(0, 3));
+    
+    // Set up an interval to check for expired comments every 10 seconds
+    const interval = setInterval(() => {
+      const currentTime = Date.now();
+      const twoMinutesAgo = currentTime - 2 * 60 * 1000;
+      
+      const recentComments = comments.filter(comment => 
+        comment.timestamp && comment.timestamp > twoMinutesAgo
+      );
+      
+      setVisibleComments(recentComments.slice(0, 3));
+    }, 10000);
+    
+    return () => clearInterval(interval);
+  }, [comments]);
+
   const handleSubmit = () => {
     if (!newComment.trim()) return;
     
     const comment: Comment = {
       id: Date.now(),
       text: newComment,
-      date: new Date().toLocaleDateString()
+      date: new Date().toLocaleDateString(),
+      timestamp: Date.now()
     };
     
     setComments(prev => [comment, ...prev]);
@@ -67,8 +99,8 @@ export const CommentSection: React.FC = () => {
       </div>
       
       <div className="space-y-4 mt-6" id="commentsList">
-        {comments.length > 0 ? (
-          comments.map(comment => (
+        {visibleComments.length > 0 ? (
+          visibleComments.map(comment => (
             <div key={comment.id} className="bg-white dark:bg-[#3a3a3a] p-4 rounded-md shadow">
               <p className="mb-2 text-black dark:text-white">{comment.text}</p>
               <p className="text-sm text-gray-600 dark:text-gray-300">Posted on {comment.date}</p>

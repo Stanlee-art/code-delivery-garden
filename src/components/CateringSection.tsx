@@ -7,10 +7,12 @@ interface CateringReview {
   rating: number;
   comment: string;
   date: string;
+  timestamp: number; // Adding timestamp for auto-hiding functionality
 }
 
 export const CateringSection: React.FC = () => {
   const [reviews, setReviews] = useState<CateringReview[]>([]);
+  const [visibleReviews, setVisibleReviews] = useState<CateringReview[]>([]);
   const [newReview, setNewReview] = useState('');
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -19,13 +21,42 @@ export const CateringSection: React.FC = () => {
   useEffect(() => {
     const savedReviews = localStorage.getItem('damoneCateringReviews');
     if (savedReviews) {
-      setReviews(JSON.parse(savedReviews));
+      const parsedReviews = JSON.parse(savedReviews);
+      setReviews(parsedReviews);
     }
   }, []);
   
   // Save reviews to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('damoneCateringReviews', JSON.stringify(reviews));
+  }, [reviews]);
+  
+  // Update visible reviews when reviews change
+  useEffect(() => {
+    // Filter out reviews older than 2 minutes
+    const currentTime = Date.now();
+    const twoMinutesAgo = currentTime - 2 * 60 * 1000;
+    
+    const recentReviews = reviews.filter(review => 
+      review.timestamp && review.timestamp > twoMinutesAgo
+    );
+    
+    // Only show the 3 most recent reviews
+    setVisibleReviews(recentReviews.slice(0, 3));
+    
+    // Set up an interval to check for expired reviews every 10 seconds
+    const interval = setInterval(() => {
+      const currentTime = Date.now();
+      const twoMinutesAgo = currentTime - 2 * 60 * 1000;
+      
+      const recentReviews = reviews.filter(review => 
+        review.timestamp && review.timestamp > twoMinutesAgo
+      );
+      
+      setVisibleReviews(recentReviews.slice(0, 3));
+    }, 10000);
+    
+    return () => clearInterval(interval);
   }, [reviews]);
   
   const handleRatingClick = (value: number) => {
@@ -39,7 +70,8 @@ export const CateringSection: React.FC = () => {
       id: Date.now(),
       rating,
       comment: newReview,
-      date: new Date().toLocaleDateString()
+      date: new Date().toLocaleDateString(),
+      timestamp: Date.now()
     };
     
     setReviews(prev => [review, ...prev]);
@@ -97,8 +129,8 @@ export const CateringSection: React.FC = () => {
       <div className="reviews-list space-y-4 mt-6">
         <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">Customer Reviews</h3>
         
-        {reviews.length > 0 ? (
-          reviews.map(review => (
+        {visibleReviews.length > 0 ? (
+          visibleReviews.map(review => (
             <div key={review.id} className="bg-white dark:bg-[#3a3a3a] p-4 rounded-md shadow">
               <div className="flex items-center mb-2">
                 <div className="flex mr-2">
