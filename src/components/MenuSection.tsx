@@ -42,10 +42,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
             className="menu-item"
           >
             {item.image && (
-              <img 
-                src={item.image} 
-                alt={item.name}
-                className={`menu-img-${item.id.toLowerCase().replace(/ /g, '-')}`}
+              <div className={`menu-img-${item.id.toLowerCase().replace(/ /g, '-')}`} 
+                style={{ width: '100%', height: '150px', borderRadius: '8px' }}
               />
             )}
             <p>{item.name}</p>
