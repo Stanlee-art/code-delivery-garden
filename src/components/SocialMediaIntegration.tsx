@@ -30,14 +30,14 @@ export const SocialMediaIntegration: React.FC = () => {
       },
       {
         id: '2',
-        content: 'Weekend special: 15% off on all desserts! Tag a friend you'd bring along.',
+        content: 'Weekend special: 15% off on all desserts! Tag a friend you\'d bring along.',
         date: '5 hours ago',
         platform: 'facebook',
         imageUrl: '/images/download (13).jpeg'
       },
       {
         id: '3',
-        content: 'Chef's special of the day: Grilled salmon with lemon butter sauce',
+        content: 'Chef\'s special of the day: Grilled salmon with lemon butter sauce',
         date: '1 day ago',
         platform: 'instagram',
         imageUrl: '/images/download (4).jpeg'
