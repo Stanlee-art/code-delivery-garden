@@ -32,10 +32,6 @@ export const Navigation: React.FC<NavigationProps> = ({
       }`
     : 'sticky top-0 bg-white dark:bg-[#222] shadow-md z-30';
 
-  // Color from the provided image - a rich brown color #684b2c
-  const activeColor = '#684b2c';
-  const activeDarkColor = '#a77e58';
-
   return (
     <nav className={navClass}>
       <ul className={`flex ${isMobile ? 'flex-col' : 'flex-row justify-center'} p-0 m-0`}>
@@ -45,7 +41,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               id={`nav-${item.id}`}
               className={`px-4 py-2 text-lg ${
                 activeSection === item.id
-                  ? `text-[${activeColor}] dark:text-[${activeDarkColor}] font-bold border-b-2 border-[${activeColor}] dark:border-[${activeDarkColor}]`
+                  ? 'text-[#684b2c] dark:text-[#a77e58] font-bold border-b-2 border-[#684b2c] dark:border-[#a77e58]'
                   : 'text-black dark:text-white hover:text-[#684b2c] dark:hover:text-[#a77e58]'
               } ${isMobile ? 'block w-full text-left border-b border-gray-200 dark:border-gray-700' : ''}`}
               onClick={() => handleSectionChange(item.id)}
