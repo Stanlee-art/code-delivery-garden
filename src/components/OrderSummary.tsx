@@ -8,7 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose
+  DialogClose,
+  DialogDescription
 } from '@/components/ui/dialog';
 import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
@@ -55,6 +56,9 @@ export const OrderSummary: React.FC = () => {
                 ? translations[language].orderReceived 
                 : translations[language].yourOrder}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              {isOrderSubmitted ? translations[language].thankYouForOrder : translations[language].yourOrderItems}
+            </DialogDescription>
           </DialogHeader>
           
           {isOrderSubmitted ? (
@@ -125,7 +129,7 @@ export const OrderSummary: React.FC = () => {
                 </div>
               )}
               
-              <DialogFooter className="flex justify-end gap-3 mt-6">
+              <DialogFooter className="flex justify-between gap-3 mt-6">
                 <DialogClose className="bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 px-4 py-2 rounded">
                   {translations[language].cancel}
                 </DialogClose>

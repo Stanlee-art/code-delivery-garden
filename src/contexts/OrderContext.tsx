@@ -45,7 +45,7 @@ export const OrderProvider = ({ children, language }: { children: ReactNode, lan
     
     toast({
       title: translations[language].itemAdded,
-      description: `${item.name} ${translations[language].addedToOrder}`,
+      description: `${item.name} ${translations[language].addedToCart}`,
       duration: 2000,
     });
   };
