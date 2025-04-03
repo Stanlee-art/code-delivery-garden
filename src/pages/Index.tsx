@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MenuSection } from '@/components/MenuSection';
@@ -13,20 +12,19 @@ import { OrderProvider, useOrder } from '@/contexts/OrderContext';
 import { menuData } from '@/data/menuData';
 import { translations, SupportedLanguage } from '@/utils/translations';
 import { Toaster } from '@/components/ui/toaster';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Twitter, ShoppingCart } from 'lucide-react';
 
 const OrderButton = () => {
   const { totalItems, setShowOrderSummary, language } = useOrder();
   
   return (
     <button 
-      className="fixed bottom-5 right-5 bg-[#684b2c] hover:bg-[#a77e58] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-transform transform hover:scale-110"
+      className="fixed bottom-5 right-5 bg-[#684b2c] hover:bg-[#a77e58] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-transform transform hover:scale-110 z-50"
       onClick={() => setShowOrderSummary(true)}
+      aria-label={translations[language].yourOrder}
     >
       <div className="relative">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
+        <ShoppingCart className="h-8 w-8" />
         {totalItems > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {totalItems}

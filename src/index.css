@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -151,14 +152,15 @@ nav ul li {
 nav ul li button {
   background: none;
   border: none;
-  color: black; /* Default light mode color */
+  color: #333; /* Darker color for better visibility */
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
+  transition: color 0.3s;
 }
 
 .dark-mode nav ul li button {
-  color: white; /* Dark mode color */
+  color: white; /* Ensure white text in dark mode */
 }
 
 nav ul li button:hover {
