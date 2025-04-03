@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
         <Input
           type="text"
           id="searchBar"
-          placeholder="Search menu..."
+          placeholder={translations[language].searchMenu || "Search menu..."}
           value={searchQuery}
           onChange={handleSearch}
           className="w-full md:w-60 bg-white text-[#684b2c] dark:bg-[#3a3a3a] dark:text-white"

@@ -177,7 +177,7 @@ nav ul li button.active {
 .dark-mode nav ul li button.active {
   color: #a77e58 !important; /* Dark mode active color matching the image */
   border-bottom: 2px solid #a77e58;
-  outline: 1px solid #a77e58;
+  outline: 2px solid #a77e58;
   border-radius: 4px;
 }
 
@@ -252,6 +252,11 @@ nav ul li button.active {
 .dark-mode #catering h2,
 .dark-mode #contact h2 {
   color: white; /* White for dark mode */
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+  outline: 2px solid #a77e58;
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: inline-block;
 }
 
 /* Menu Items - Modified for easier custom image replacement */
