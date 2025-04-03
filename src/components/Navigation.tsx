@@ -41,7 +41,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               id={`nav-${item.id}`}
               className={`px-4 py-2 text-lg font-medium ${
                 activeSection === item.id
-                  ? 'text-[#684b2c] dark:text-[#a77e58] font-bold border-b-2 border-[#684b2c] dark:border-[#a77e58]'
+                  ? 'text-[#684b2c] dark:text-[#a77e58] font-bold border-b-2 border-[#684b2c] dark:border-[#a77e58] dark:outline dark:outline-1 dark:outline-[#a77e58] dark:rounded'
                   : 'text-[#333] dark:text-white hover:text-[#684b2c] dark:hover:text-[#a77e58]'
               } ${isMobile ? 'block w-full text-left border-b border-gray-200 dark:border-gray-700' : ''}`}
               onClick={() => handleSectionChange(item.id)}

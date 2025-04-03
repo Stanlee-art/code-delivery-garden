@@ -4,6 +4,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { MenuItemType } from '@/types/menu';
 import { useOrder } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
+import { Button } from "@/components/ui/button";
 
 interface MenuSectionProps {
   title: string;
@@ -46,8 +47,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                 style={{ width: '100%', height: '150px', borderRadius: '8px' }}
               />
             )}
-            <p>{item.name}</p>
-            <span>${item.price}</span>
+            <p className="font-medium">{item.name}</p>
+            <span className="text-[#684b2c] dark:text-[#ffcc00] font-bold">${item.price}</span>
             {item.description && (
               <p className="description">{item.description}</p>
             )}
@@ -69,12 +70,12 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
             </div>
             
             {/* Add to Order button */}
-            <button 
-              className="mt-2 bg-[#684b2c] hover:bg-[#a77e58] text-white px-2 py-1 rounded text-sm transition-colors"
+            <Button 
+              className="mt-3 w-full bg-[#684b2c] hover:bg-[#a77e58] text-white py-1 rounded text-sm transition-colors"
               onClick={() => addToOrder(item)}
             >
-              {translations[language].addToOrder}
-            </button>
+              {translations[language].orderNow}
+            </Button>
           </div>
         ))}
       </div>
