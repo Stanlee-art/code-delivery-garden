@@ -126,7 +126,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #684b2c; /* Exact color from the uploaded image */
+  background-color: #684b2c;
   padding: 15px 20px;
   color: white;
 }
@@ -147,7 +147,7 @@ nav ul li {
   margin: 0 15px;
 }
 
-/* Navigation Button Styling */
+/* Fix Navigation Button Styling */
 nav ul li button {
   background: none;
   border: none;
@@ -163,19 +163,6 @@ nav ul li button {
 
 nav ul li button:hover {
   text-decoration: underline;
-}
-
-/* Active section styling - update with the colors from the image */
-.active-section button,
-nav ul li button.active {
-  color: #684b2c !important; /* Light mode active color */
-  border-bottom: 2px solid #684b2c;
-}
-
-.dark-mode .active-section button,
-.dark-mode nav ul li button.active {
-  color: #a77e58 !important; /* Dark mode active color matching the image */
-  border-bottom: 2px solid #a77e58;
 }
 
 /* Dark Mode Button */
