@@ -1,16 +1,47 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Default to empty strings to prevent runtime errors
-// but display a warning if the values are missing
+// Create a temporary dummy client if no environment variables are available
+// This prevents the app from crashing on initial load
+const createDummyClient = () => {
+  console.warn(
+    'Using dummy Supabase client. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
+  );
+  
+  // Return a stub client that won't crash the app but won't work either
+  return {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      signInWithPassword: async () => ({ data: null, error: { message: "Supabase credentials not configured" } }),
+      signUp: async () => ({ data: null, error: { message: "Supabase credentials not configured" } }),
+      signOut: async () => ({ error: null }),
+    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: async () => ({ data: null, error: null }),
+          order: () => ({ data: [], error: null }),
+        }),
+        order: () => ({ data: [], error: null }),
+      }),
+      insert: () => ({
+        select: () => ({
+          single: async () => ({ data: null, error: null }),
+        }),
+      }),
+      upsert: async () => ({ data: null, error: null }),
+    }),
+  };
+};
+
+// Get environment variables or empty strings
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-// Show a warning in console if environment variables are missing
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    'Missing Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
-  );
-}
+// Export either a real client or a dummy client
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : createDummyClient();
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
