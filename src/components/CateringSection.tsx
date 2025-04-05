@@ -1,214 +1,283 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
+import { Star } from 'lucide-react';
+
+interface CateringReview {
+  id: number;
+  name: string;
+  review: string;
+  rating: number;
+  date: string;
+  timestamp: number; // Adding timestamp for auto-hiding functionality
+}
 
 export const CateringSection: React.FC = () => {
-  const [reviews, setReviews] = useState<Array<{id: string, name: string, text: string, date: string, visible: boolean}>>([
-    { id: '1', name: 'Corporate Event', text: 'The team catered our company event for 200 people. Everything was perfect!', date: '2023-03-15', visible: true },
-    { id: '2', name: 'Wedding Reception', text: 'They made our special day even more magical with their delicious food.', date: '2023-03-20', visible: true },
-    { id: '3', name: 'Birthday Party', text: 'Our guests couldn\'t stop talking about how amazing the food was.', date: '2023-03-25', visible: true },
-    { id: '4', name: 'Graduation Party', text: 'Fantastic service and presentation. Would hire again!', date: '2023-03-30', visible: true },
-    { id: '5', name: 'Family Reunion', text: 'They accommodated our large group with ease and the food was outstanding.', date: '2023-04-01', visible: true }
-  ]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [event, setEvent] = useState('');
+  const [guests, setGuests] = useState('');
+  const [date, setDate] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [reviews, setReviews] = useState<CateringReview[]>([]);
+  const [visibleReviews, setVisibleReviews] = useState<CateringReview[]>([]);
   
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    eventDate: '',
-    guestCount: '',
-    eventType: '',
-    message: ''
-  });
-  
+  // Load reviews from localStorage on component mount
   useEffect(() => {
-    // Initialize visibility to show only the first 3 reviews
-    const initializedReviews = reviews.map((review, index) => ({
-      ...review,
-      visible: index < 3
-    }));
-    setReviews(initializedReviews);
-    
-    // Set up auto-hiding timer for reviews
-    const hideReviewsInterval = setInterval(() => {
-      setReviews(prevReviews => {
-        // Get all visible reviews
-        const visibleReviews = prevReviews.filter(r => r.visible);
-        
-        // If there are more than 3 visible reviews, hide the oldest one
-        if (visibleReviews.length > 3) {
-          const reviewToHide = visibleReviews[0].id;
-          return prevReviews.map(review => 
-            review.id === reviewToHide ? {...review, visible: false} : review
-          );
+    const savedReviews = localStorage.getItem('damoneReviews');
+    if (savedReviews) {
+      const parsedReviews = JSON.parse(savedReviews);
+      setReviews(parsedReviews);
+    } else {
+      // Initial sample reviews
+      const initialReviews: CateringReview[] = [
+        {
+          id: 1,
+          name: 'Emily Johnson',
+          review: 'Damone catered our wedding and the food was exceptional! All our guests were impressed.',
+          rating: 5,
+          date: '2023-10-05',
+          timestamp: Date.now() - 1000000 // A bit in the past
+        },
+        {
+          id: 2,
+          name: 'Michael Chen',
+          review: 'Great service for our corporate event. Professional staff and delicious menu options.',
+          rating: 4,
+          date: '2023-09-22',
+          timestamp: Date.now() - 2000000 // A bit more in the past
+        },
+        {
+          id: 3,
+          name: 'Sarah Williams',
+          review: 'Loved the variety of options for our family reunion. Very accommodating with dietary restrictions.',
+          rating: 5,
+          date: '2023-08-30',
+          timestamp: Date.now() - 3000000 // Even more in the past
         }
-        return prevReviews;
-      });
-    }, 120000); // 2 minutes = 120000ms
-    
-    return () => clearInterval(hideReviewsInterval);
+      ];
+      setReviews(initialReviews);
+      localStorage.setItem('damoneReviews', JSON.stringify(initialReviews));
+    }
   }, []);
-  
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-  
+
+  // Update visible reviews when reviews change
+  useEffect(() => {
+    // Filter out reviews older than 2 minutes
+    const currentTime = Date.now();
+    const twoMinutesAgo = currentTime - 2 * 60 * 1000;
+    
+    const recentReviews = reviews.filter(review => 
+      review.timestamp && review.timestamp > twoMinutesAgo
+    );
+    
+    // Only show the 3 most recent reviews
+    setVisibleReviews(recentReviews.slice(0, 3));
+    
+    // Set up an interval to check for expired reviews every 10 seconds
+    const interval = setInterval(() => {
+      const currentTime = Date.now();
+      const twoMinutesAgo = currentTime - 2 * 60 * 1000;
+      
+      const recentReviews = reviews.filter(review => 
+        review.timestamp && review.timestamp > twoMinutesAgo
+      );
+      
+      setVisibleReviews(recentReviews.slice(0, 3));
+    }, 10000);
+    
+    return () => clearInterval(interval);
+  }, [reviews]);
+
+  // Save reviews to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('damoneReviews', JSON.stringify(reviews));
+  }, [reviews]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Catering inquiry submitted:', formData);
-    // Here you would typically send the data to a server
-    alert('Thank you for your inquiry! We will contact you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      eventDate: '',
-      guestCount: '',
-      eventType: '',
-      message: ''
-    });
+    setSubmitted(true);
+    
+    // In a real app, you would send this data to your backend
+    console.log('Catering inquiry submitted:', { name, email, phone, event, guests, date, message });
+    
+    // Reset form after submission
+    setTimeout(() => {
+      setName('');
+      setEmail('');
+      setPhone('');
+      setEvent('');
+      setGuests('');
+      setDate('');
+      setMessage('');
+      setSubmitted(false);
+    }, 3000);
   };
-  
+
+  const handleAddReview = () => {
+    const newReview: CateringReview = {
+      id: Date.now(),
+      name: 'Guest User',
+      review: 'The catering service was excellent! Would definitely recommend for any event.',
+      rating: 5,
+      date: new Date().toISOString().split('T')[0],
+      timestamp: Date.now()
+    };
+    
+    setReviews(prev => [newReview, ...prev]);
+  };
+
+  const renderStars = (rating: number) => {
+    return Array(5).fill(0).map((_, i) => (
+      <Star
+        key={i}
+        size={16}
+        className={i < rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}
+      />
+    ));
+  };
+
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Our Catering Services</h3>
-        <p className="mb-3">
-          We offer full-service catering for events of all sizes. From corporate lunches to wedding receptions, 
-          our team will work with you to create a memorable culinary experience.
+    <div className="catering-section space-y-8">
+      <div className="max-w-3xl mx-auto">
+        <p className="text-lg mb-6">
+          Let us make your next event special with our professional catering services. From intimate gatherings to large celebrations, we offer customized menus to suit your needs.
         </p>
         
-        <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-4">Customer Reviews</h3>
-          <div className="space-y-4">
-            {reviews.filter(review => review.visible).map((review) => (
-              <Card 
-                key={review.id} 
-                className={`catering-review-container ${review.visible ? '' : 'hidden'} bg-white dark:bg-gray-700 shadow`}
-              >
-                <CardContent className="p-4">
-                  <h4 className="font-bold">{review.name}</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{review.date}</p>
-                  <p className="mt-2">{review.text}</p>
-                </CardContent>
-              </Card>
-            ))}
+        {submitted ? (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
+            <strong className="font-bold">Thank you!</strong>
+            <span className="block sm:inline"> Your catering inquiry has been submitted. Our team will contact you shortly.</span>
           </div>
-        </div>
-      </div>
-      
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Request a Quote</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block mb-1">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleFormChange}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="email" className="block mb-1">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleFormChange}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="phone" className="block mb-1">Phone</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleFormChange}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="eventDate" className="block mb-1">Event Date</label>
-              <input
-                type="date"
-                id="eventDate"
-                name="eventDate"
-                value={formData.eventDate}
-                onChange={handleFormChange}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                required
-              />
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4 bg-white dark:bg-[#3a3a3a] p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4 text-black dark:text-white">Catering Inquiry</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Name*</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Email*</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Phone*</label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Event Type*</label>
+                <select
+                  value={event}
+                  onChange={(e) => setEvent(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+                >
+                  <option value="">Select Event Type</option>
+                  <option value="wedding">Wedding</option>
+                  <option value="corporate">Corporate Event</option>
+                  <option value="birthday">Birthday Party</option>
+                  <option value="anniversary">Anniversary</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Number of Guests*</label>
+                <input
+                  type="number"
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
+                  required
+                  min="1"
+                  className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Event Date*</label>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+                />
+              </div>
             </div>
             
             <div>
-              <label htmlFor="guestCount" className="block mb-1">Guest Count</label>
-              <input
-                type="number"
-                id="guestCount"
-                name="guestCount"
-                value={formData.guestCount}
-                onChange={handleFormChange}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                required
-              />
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Additional Information</label>
+              <textarea
+                rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full p-2 border rounded focus:ring-2 focus:outline-none text-black dark:text-white bg-white dark:bg-[#333]"
+              ></textarea>
             </div>
-          </div>
-          
-          <div>
-            <label htmlFor="eventType" className="block mb-1">Event Type</label>
-            <select
-              id="eventType"
-              name="eventType"
-              value={formData.eventType}
-              onChange={handleFormChange}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              required
+            
+            <button
+              type="submit"
+              className="bg-[#684b2c] text-white px-6 py-2 rounded-md hover:bg-[#a77e58] transition-colors"
             >
-              <option value="">Select Event Type</option>
-              <option value="wedding">Wedding</option>
-              <option value="corporate">Corporate Event</option>
-              <option value="birthday">Birthday Party</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          
-          <div>
-            <label htmlFor="message" className="block mb-1">Additional Information</label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleFormChange}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 min-h-[100px]"
-            ></textarea>
-          </div>
-          
+              Submit Inquiry
+            </button>
+          </form>
+        )}
+      </div>
+      
+      <div className="mt-10">
+        <h3 className="text-xl font-semibold mb-4 text-black dark:text-white">Customer Reviews</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {visibleReviews.length > 0 ? (
+            visibleReviews.map(review => (
+              <div key={review.id} className="bg-white dark:bg-[#3a3a3a] p-4 rounded-md shadow-md">
+                <div className="flex items-center mb-2">
+                  <span className="font-semibold text-black dark:text-white mr-2">{review.name}</span>
+                  <div className="flex">{renderStars(review.rating)}</div>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300">{review.review}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{review.date}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 col-span-3 text-center">No reviews available. Be the first to leave a review!</p>
+          )}
+        </div>
+        
+        <div className="mt-4 text-center">
           <button
-            type="submit"
-            className="bg-[#684b2c] hover:bg-[#a77e58] text-white py-2 px-4 rounded"
+            onClick={handleAddReview}
+            className="mt-4 bg-[#684b2c] text-white px-4 py-2 rounded-md hover:bg-[#a77e58] transition-colors"
           >
-            Submit Request
+            Add Sample Review
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
 };
-

@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -152,15 +151,14 @@ nav ul li {
 nav ul li button {
   background: none;
   border: none;
-  color: #333; /* Darker color for better visibility */
+  color: black; /* Default light mode color */
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
-  transition: color 0.3s;
 }
 
 .dark-mode nav ul li button {
-  color: white; /* Ensure white text in dark mode */
+  color: white; /* Dark mode color */
 }
 
 nav ul li button:hover {
@@ -178,8 +176,6 @@ nav ul li button.active {
 .dark-mode nav ul li button.active {
   color: #a77e58 !important; /* Dark mode active color matching the image */
   border-bottom: 2px solid #a77e58;
-  outline: 2px solid #a77e58;
-  border-radius: 4px;
 }
 
 /* Dark Mode Button */
@@ -227,7 +223,7 @@ nav ul li button.active {
   padding: 20px;
   text-align: center;
   margin: 20px auto;
-  max-width: 1200px;
+  max-width: 800px;
   border-radius: 8px;
 }
 
@@ -236,7 +232,7 @@ nav ul li button.active {
   color: white;
 }
 
-/* Section Headers - UPDATED TO BE ALWAYS VISIBLE */
+/* Section Headers */
 .menu-category h1, 
 .menu-category h2, 
 #order h2, 
@@ -244,15 +240,7 @@ nav ul li button.active {
 #contact h2 {
   color: black; /* Black for light mode */
   cursor: pointer;
-  transition: transform 0.2s;
-  padding: 4px 8px;
-  display: inline-block;
-  border-radius: 4px;
-  margin: 10px 0;
-  font-weight: bold;
-  /* Make sure headers are always visible */
-  outline: 2px solid #684b2c;
-  background-color: rgba(255, 255, 255, 0.2);
+  transition: color 0.3s ease-in-out, transform 0.2s;
 }
 
 .dark-mode .menu-category h1,
@@ -261,37 +249,173 @@ nav ul li button.active {
 .dark-mode #catering h2,
 .dark-mode #contact h2 {
   color: white; /* White for dark mode */
-  text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
-  outline: 2px solid #a77e58;
-  border-radius: 4px;
-  padding: 4px 8px;
-  display: inline-block;
-  background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Hover and click effect for headers - MODIFIED TO PRESERVE VISIBILITY */
+/* Menu Items - Modified for easier custom image replacement */
+.menu-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.menu-item {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px;
+  text-align: center;
+  width: 200px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, color 0.3s, background-color 0.3s;
+  color: #333;
+}
+
+/* Image Styling - Ensures images fit properly and are ready for manual replacement */
+.menu-item img {
+  width: 100; /* Adjust image size */
+  height: 150px; /* Uniform height */
+  object-fit: cover; /* Prevents stretching */
+  border-radius: 8px;
+}
+
+/* Added custom classes for manual image replacement */
+.menu-img-kebab,
+.menu-img-bhajia,
+.menu-img-garlic-bread,
+.menu-img-stuffed-mushrooms,
+.menu-img-mandazi,
+.menu-img-chicken-wings,
+.menu-img-nyama-choma,
+.menu-img-steak-and-fries,
+.menu-img-pasta-alfredo,
+.menu-img-chicken-parmesan,
+.menu-img-pilau,
+.menu-img-veggie-stir-fry,
+.menu-img-chocolate-cake,
+.menu-img-cheesecake,
+.menu-img-ice-cream-sundae,
+.menu-img-tiramisu,
+.menu-img-fruit-tart,
+.menu-img-pink-moscato,
+.menu-img-white-wine,
+.menu-img-red-wine,
+.menu-img-bellini-peach-tea,
+.menu-img-classic-lemonade,
+.menu-img-iced-tea,
+.menu-img-raspberry-lemonade,
+.menu-img-soft-drink {
+  /* These classes can be used in the HTML to target specific menu item images */
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.menu-item:hover {
+  transform: scale(1.05);
+}
+
+/* Ingredient Description */
+.menu-item p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.menu-item .description {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* ⭐ Star Rating System */
+.rating {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.rating span {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ccc; /* Default gray */
+  transition: color 0.3s, transform 0.2s;
+}
+
+/* Highlight stars on hover */
+.rating span:hover,
+.rating span:hover ~ span {
+  color: #ffcc00;
+  transform: scale(1.2);
+}
+
+/* Highlight selected stars */
+.rating.selected span {
+  color: #ffcc00;
+}
+
+.rating.selected span:hover,
+.rating.selected span:hover ~ span {
+  color: #ffcc00;
+}
+
+/* ⭐ Dark Mode Support */
+.dark-mode .rating span {
+  color: #666; /* Default gray in dark mode */
+}
+
+.dark-mode .rating span:hover,
+.dark-mode .rating span:hover ~ span,
+.dark-mode .rating.selected span {
+  color: #ffcc00;
+}
+
+/* Dark Mode Fix for Menu Items */
+.dark-mode .menu-item {
+  background: #3a3a3a;
+  color: white;
+}
+
+.dark-mode .menu-item span {
+  color: #ffcc00;
+}
+
+.dark-mode .menu-item .description {
+  color: #bbb;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* QR Code Section */
+.qr-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.qr-section img {
+  width: 150px;
+  height: auto;
+}
+
+/* Hover and click effect for headers */
+.menu-category h1, .menu-category h2, #order h2, #catering h2, #contact h2 {
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, transform 0.2s;
+}
+
 .menu-category h1:hover, .menu-category h2:hover,
 #order h2:hover, #catering h2:hover, #contact h2:hover {
   color: #ffcc00; /* Gold color for highlight */
   transform: scale(1.1);
-  /* Maintain outline during hover */
-  outline: 2px solid #ffcc00;
-}
-
-.dark-mode .menu-category h1:hover, 
-.dark-mode .menu-category h2:hover,
-.dark-mode #order h2:hover, 
-.dark-mode #catering h2:hover, 
-.dark-mode #contact h2:hover {
-  color: #ffcc00; /* Gold color for highlight */
-  outline: 2px solid #ffcc00;
 }
 
 /* Active Section Effect */
 .active-header {
-  color: #ffcc00 !important; 
+  color: #ffcc00; 
   text-shadow: 0px 0px 10px rgba(255, 204, 0, 0.8);
-  outline: 2px solid #ffcc00 !important;
 }
 
 /* ===== Enhanced Styling for the Category Selection Popup ===== */
@@ -512,135 +636,4 @@ body {
   h1, h2 {
     font-size: 18px;
   }
-}
-
-/* Enhanced Menu Item Styling */
-.menu-item {
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.dark-mode .menu-item {
-  background-color: #333;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.menu-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.menu-item img {
-  width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-
-.menu-item h3 {
-  font-size: 1.2rem;
-  margin: 10px 0 5px;
-  font-weight: bold;
-}
-
-.menu-item .price {
-  color: #684b2c;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.dark-mode .menu-item .price {
-  color: #ffcc00;
-}
-
-.menu-item .description {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 15px;
-}
-
-.dark-mode .menu-item .description {
-  color: #ccc;
-}
-
-/* Rating stars styling */
-.rating {
-  display: flex;
-  justify-content: center;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.rating span {
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.2s;
-  margin: 0 2px;
-}
-
-.rating span:hover {
-  color: #ffcc00;
-}
-
-.rating.selected span {
-  color: #ccc;
-}
-
-.rating.selected span.selected {
-  color: #ffcc00;
-}
-
-/* Order Now button styling */
-.menu-item button {
-  margin-top: auto;
-  padding: 8px 12px;
-  background-color: #684b2c;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-weight: bold;
-  width: 100%;
-}
-
-.menu-item button:hover {
-  background-color: #a77e58;
-}
-
-.dark-mode .menu-item button {
-  background-color: #a77e58;
-}
-
-.dark-mode .menu-item button:hover {
-  background-color: #c09b75;
-}
-
-/* Auto-hiding comments feature */
-.comment-container,
-.catering-review-container {
-  transition: opacity 0.3s ease, height 0.3s ease;
-  max-height: 1000px;
-  opacity: 1;
-}
-
-.comment-container.hiding,
-.catering-review-container.hiding {
-  opacity: 0.5;
-}
-
-.comment-container.hidden,
-.catering-review-container.hidden {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
 }

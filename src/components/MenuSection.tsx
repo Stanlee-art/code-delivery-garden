@@ -4,8 +4,6 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { MenuItemType } from '@/types/menu';
 import { useOrder } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface MenuSectionProps {
   title: string;
@@ -36,57 +34,48 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 
   return (
     <div className="mb-10">
-      <h2 className="text-2xl font-semibold mb-4 pb-2 border-b" id={`${title.toLowerCase()}Heading`}>{title}</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <h2 className="text-2xl font-semibold mb-4 border-b pb-2" id={`${title.toLowerCase()}Heading`}>{title}</h2>
+      <div className="menu-items">
         {filteredItems.map((item) => (
-          <Card
-            key={item.id}
-            className="menu-item overflow-hidden bg-white dark:bg-gray-700 shadow hover:shadow-lg transition-all"
+          <div 
+            key={item.id} 
+            className="menu-item"
           >
             {item.image && (
-              <div className="h-36 overflow-hidden">
-                <img 
-                  src={item.image} 
-                  alt={item.name}
-                  className="w-full h-full object-cover" 
-                />
-              </div>
+              <div className={`menu-img-${item.id.toLowerCase().replace(/ /g, '-')}`} 
+                style={{ width: '100%', height: '150px', borderRadius: '8px' }}
+              />
             )}
-            <CardContent className="p-3">
-              <h3 className="text-base font-medium">{item.name}</h3>
-              <p className="text-[#684b2c] dark:text-[#ffcc00] font-bold text-sm">${item.price}</p>
-              {item.description && (
-                <p className="text-gray-600 dark:text-gray-300 text-xs mt-1 mb-2 line-clamp-2">{item.description}</p>
-              )}
-              
-              <div className="mt-2">
-                {/* Rating stars */}
-                <div className="rating mb-1" data-item-id={item.id}>
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <span
-                      key={value}
-                      data-value={value}
-                      onClick={() => onRatingClick(item.id, value)}
-                      className="text-lg cursor-pointer"
-                      style={{ 
-                        color: value <= (selectedRatings[item.id] || 0) ? '#ffcc00' : '#ccc' 
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-                
-                {/* Add to Order button */}
-                <Button 
-                  className="w-full bg-[#684b2c] hover:bg-[#a77e58] text-white py-1 text-sm rounded mt-1"
-                  onClick={() => addToOrder(item)}
+            <p>{item.name}</p>
+            <span>${item.price}</span>
+            {item.description && (
+              <p className="description">{item.description}</p>
+            )}
+            
+            {/* Rating stars */}
+            <div className={`rating ${selectedRatings[item.id] ? 'selected' : ''}`} data-item-id={item.id}>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <span
+                  key={value}
+                  data-value={value}
+                  onClick={() => onRatingClick(item.id, value)}
+                  style={{ 
+                    color: value <= (selectedRatings[item.id] || 0) ? '#ffcc00' : '' 
+                  }}
                 >
-                  {translations[language].orderNow}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                  ★
+                </span>
+              ))}
+            </div>
+            
+            {/* Add to Order button */}
+            <button 
+              className="mt-2 bg-[#684b2c] hover:bg-[#a77e58] text-white px-2 py-1 rounded text-sm transition-colors"
+              onClick={() => addToOrder(item)}
+            >
+              {translations[language].addToOrder}
+            </button>
+          </div>
         ))}
       </div>
     </div>
