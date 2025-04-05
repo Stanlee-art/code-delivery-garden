@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -226,7 +227,7 @@ nav ul li button.active {
   padding: 20px;
   text-align: center;
   margin: 20px auto;
-  max-width: 800px;
+  max-width: 1200px;
   border-radius: 8px;
 }
 
@@ -513,6 +514,89 @@ body {
   }
 }
 
+/* Enhanced Menu Item Styling */
+.menu-item {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dark-mode .menu-item {
+  background-color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.menu-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.menu-item img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.menu-item h3 {
+  font-size: 1.2rem;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+.menu-item .price {
+  color: #684b2c;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.dark-mode .menu-item .price {
+  color: #ffcc00;
+}
+
+.menu-item .description {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.dark-mode .menu-item .description {
+  color: #ccc;
+}
+
+/* Rating stars styling */
+.rating {
+  display: flex;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.rating span {
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  margin: 0 2px;
+}
+
+.rating span:hover {
+  color: #ffcc00;
+}
+
+.rating.selected span {
+  color: #ccc;
+}
+
+.rating.selected span.selected {
+  color: #ffcc00;
+}
+
 /* Order Now button styling */
 .menu-item button {
   margin-top: auto;
@@ -524,6 +608,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s;
   font-weight: bold;
+  width: 100%;
 }
 
 .menu-item button:hover {
@@ -536,4 +621,26 @@ body {
 
 .dark-mode .menu-item button:hover {
   background-color: #c09b75;
+}
+
+/* Auto-hiding comments feature */
+.comment-container,
+.catering-review-container {
+  transition: opacity 0.3s ease, height 0.3s ease;
+  max-height: 1000px;
+  opacity: 1;
+}
+
+.comment-container.hiding,
+.catering-review-container.hiding {
+  opacity: 0.5;
+}
+
+.comment-container.hidden,
+.catering-review-container.hidden {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
