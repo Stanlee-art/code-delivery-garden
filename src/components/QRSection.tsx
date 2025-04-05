@@ -13,9 +13,6 @@ export const QRSection: React.FC = () => {
           <p className="text-sm text-gray-600 absolute">QR Code Placeholder</p>
         </div>
       </div>
-      <p className="text-sm mt-2 text-gray-600">
-        You can replace this QR code by adding your custom image in index.html
-      </p>
     </section>
   );
 };
