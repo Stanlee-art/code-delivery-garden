@@ -1,6 +1,9 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { translations, SupportedLanguage } from '@/utils/translations';
+import { supabase } from '@/lib/supabase';
+import { ShieldCheck } from 'lucide-react';
 
 interface NavigationProps {
   activeSection: string;
@@ -17,6 +20,29 @@ export const Navigation: React.FC<NavigationProps> = ({
   isOpen,
   language
 }) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+      
+      if (session?.user) {
+        // Check if user is admin
+        const { data } = await supabase
+          .from('admins')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
+          
+        setIsAdmin(!!data);
+      }
+    };
+    
+    checkAuth();
+  }, []);
+
   // Define navigation items using the translations
   const navItems = [
     { id: 'food', label: translations[language].food },
@@ -42,6 +68,31 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
             </li>
           ))}
+          
+          {isLoggedIn && (
+            <li>
+              <Link to="/profile" className="nav-btn text-white dark:text-white hover:text-[#ffcc00] block">
+                My Profile
+              </Link>
+            </li>
+          )}
+          
+          {!isLoggedIn && (
+            <li>
+              <Link to="/login" className="nav-btn text-white dark:text-white hover:text-[#ffcc00] block">
+                Login
+              </Link>
+            </li>
+          )}
+          
+          {isAdmin && (
+            <li>
+              <Link to="/admin" className="nav-btn text-white dark:text-white hover:text-[#ffcc00] flex items-center">
+                <ShieldCheck className="mr-2 h-4 w-4" />
+                Admin
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     );
@@ -62,6 +113,31 @@ export const Navigation: React.FC<NavigationProps> = ({
             </button>
           </li>
         ))}
+        
+        {isLoggedIn && (
+          <li>
+            <Link to="/profile" className="nav-btn text-black dark:text-white hover:text-[#ffcc00] font-bold">
+              My Profile
+            </Link>
+          </li>
+        )}
+        
+        {!isLoggedIn && (
+          <li>
+            <Link to="/login" className="nav-btn text-black dark:text-white hover:text-[#ffcc00] font-bold">
+              Login
+            </Link>
+          </li>
+        )}
+        
+        {isAdmin && (
+          <li>
+            <Link to="/admin" className="nav-btn text-black dark:text-white hover:text-[#ffcc00] font-bold flex items-center">
+              <ShieldCheck className="mr-2 h-4 w-4" />
+              Admin
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useOrder } from '@/contexts/OrderContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +14,7 @@ import {
 import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
 import { translations } from '@/utils/translations';
+import { ShoppingCart, CreditCard } from 'lucide-react'; 
 
 export const OrderSummary: React.FC = () => {
   const { 
@@ -28,21 +30,11 @@ export const OrderSummary: React.FC = () => {
   } = useOrder();
   
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmitOrder = () => {
-    // In a real app, this would send the order to a server
-    toast({
-      title: translations[language].orderReceived,
-      description: translations[language].thankYouForOrder,
-      duration: 5000,
-    });
-    
-    setIsOrderSubmitted(true);
-    setTimeout(() => {
-      setShowOrderSummary(false);
-      clearOrder();
-      setIsOrderSubmitted(false);
-    }, 3000);
+  const handleProceedToCheckout = () => {
+    setShowOrderSummary(false);
+    navigate('/checkout');
   };
 
   return (
@@ -125,16 +117,18 @@ export const OrderSummary: React.FC = () => {
                 </div>
               )}
               
-              <DialogFooter className="flex justify-end gap-3 mt-6">
-                <DialogClose className="bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 px-4 py-2 rounded">
+              <DialogFooter className="flex flex-col sm:flex-row gap-3 mt-6">
+                <DialogClose className="bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 px-4 py-2 rounded w-full sm:w-auto">
                   {translations[language].cancel}
                 </DialogClose>
+                
                 <Button 
-                  onClick={handleSubmitOrder}
+                  onClick={handleProceedToCheckout}
                   disabled={orderItems.length === 0}
-                  className="bg-[#684b2c] hover:bg-[#a77e58] text-white px-4 py-2 rounded"
+                  className="bg-[#684b2c] hover:bg-[#a77e58] text-white px-4 py-2 rounded w-full sm:w-auto flex items-center justify-center gap-2"
                 >
-                  {translations[language].submitOrder}
+                  <CreditCard className="h-4 w-4" />
+                  Checkout
                 </Button>
               </DialogFooter>
             </>
