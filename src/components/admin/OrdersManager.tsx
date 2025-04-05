@@ -18,7 +18,7 @@ interface Order {
   id: string;
   created_at: string;
   status: string;
-  total: number;
+  total: number | string;
   items: any[];
   user_id: string;
   user_email?: string;
@@ -235,7 +235,7 @@ export const OrdersManager: React.FC = () => {
                   <h4 className="text-sm font-medium mb-2">Order Summary</h4>
                   <p className="text-sm">Items: {order.items?.length || 0}</p>
                   <p className="text-sm font-semibold mt-1">
-                    Total: ${parseFloat(order.total).toFixed(2)}
+                    Total: ${typeof order.total === 'number' ? order.total.toFixed(2) : order.total}
                   </p>
                 </div>
               </div>
