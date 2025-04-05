@@ -37,14 +37,14 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
   return (
     <div className="mb-10">
       <h2 className="text-2xl font-semibold mb-4 pb-2 border-b" id={`${title.toLowerCase()}Heading`}>{title}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {filteredItems.map((item) => (
           <Card
             key={item.id}
-            className="menu-item overflow-hidden bg-white rounded-md shadow"
+            className="menu-item overflow-hidden bg-white dark:bg-gray-700 shadow hover:shadow-lg transition-all"
           >
             {item.image && (
-              <div className="h-48 overflow-hidden">
+              <div className="h-36 overflow-hidden">
                 <img 
                   src={item.image} 
                   alt={item.name}
@@ -52,22 +52,22 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                 />
               </div>
             )}
-            <CardContent className="p-4 flex flex-col h-[calc(100%-12rem)]">
-              <h3 className="text-lg font-medium mb-1">{item.name}</h3>
-              <p className="text-[#684b2c] dark:text-[#ffcc00] font-bold mb-2">${item.price}</p>
+            <CardContent className="p-3">
+              <h3 className="text-base font-medium">{item.name}</h3>
+              <p className="text-[#684b2c] dark:text-[#ffcc00] font-bold text-sm">${item.price}</p>
               {item.description && (
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{item.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 text-xs mt-1 mb-2 line-clamp-2">{item.description}</p>
               )}
               
-              <div className="mt-auto">
+              <div className="mt-2">
                 {/* Rating stars */}
-                <div className="rating mb-2" data-item-id={item.id}>
+                <div className="rating mb-1" data-item-id={item.id}>
                   {[1, 2, 3, 4, 5].map((value) => (
                     <span
                       key={value}
                       data-value={value}
                       onClick={() => onRatingClick(item.id, value)}
-                      className="text-2xl cursor-pointer"
+                      className="text-lg cursor-pointer"
                       style={{ 
                         color: value <= (selectedRatings[item.id] || 0) ? '#ffcc00' : '#ccc' 
                       }}
@@ -79,7 +79,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                 
                 {/* Add to Order button */}
                 <Button 
-                  className="w-full bg-[#684b2c] hover:bg-[#a77e58] text-white py-2 rounded"
+                  className="w-full bg-[#684b2c] hover:bg-[#a77e58] text-white py-1 text-sm rounded mt-1"
                   onClick={() => addToOrder(item)}
                 >
                   {translations[language].orderNow}
