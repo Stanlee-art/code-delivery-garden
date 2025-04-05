@@ -8,7 +8,7 @@ const createDummyClient = () => {
     'Using dummy Supabase client. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
   );
   
-  // Return a stub client that won't crash the app but won't work either
+  // Return a stub client that matches the shape of the real Supabase client
   return {
     auth: {
       getSession: async () => ({ data: { session: null }, error: null }),
@@ -25,11 +25,29 @@ const createDummyClient = () => {
           order: () => ({ data: [], error: null }),
         }),
         order: () => ({ data: [], error: null }),
+        data: [],
+        error: null,
       }),
       insert: () => ({
         select: () => ({
           single: async () => ({ data: null, error: null }),
+          data: null,
+          error: null,
         }),
+        data: null,
+        error: null,
+      }),
+      update: () => ({
+        eq: () => ({ data: null, error: null }),
+        match: () => ({ data: null, error: null }),
+        data: null,
+        error: null,
+      }),
+      delete: () => ({
+        eq: () => ({ data: null, error: null }),
+        match: () => ({ data: null, error: null }),
+        data: null,
+        error: null,
       }),
       upsert: async () => ({ data: null, error: null }),
     }),
@@ -44,4 +62,3 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 export const supabase = supabaseUrl && supabaseAnonKey 
   ? createClient(supabaseUrl, supabaseAnonKey)
   : createDummyClient();
-

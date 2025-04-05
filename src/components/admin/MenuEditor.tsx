@@ -71,11 +71,13 @@ export const MenuEditor: React.FC = () => {
         query = query.eq('category', categoryFilter);
       }
       
-      const { data, error } = await query;
+      const response = await query;
+      const data = response?.data || [];
+      const error = response?.error;
       
       if (error) throw error;
       
-      setMenuItems(data || []);
+      setMenuItems(data);
     } catch (error: any) {
       toast({
         title: "Error loading menu items",
@@ -117,11 +119,12 @@ export const MenuEditor: React.FC = () => {
     if (!confirm('Are you sure you want to delete this menu item?')) return;
     
     try {
-      const { error } = await supabase
+      const response = await supabase
         .from('menu_items')
         .delete()
         .eq('id', id);
         
+      const error = response?.error;
       if (error) throw error;
       
       toast({
@@ -160,7 +163,7 @@ export const MenuEditor: React.FC = () => {
     
     try {
       if (isNewItem) {
-        const { data, error } = await supabase
+        const response = await supabase
           .from('menu_items')
           .insert([{
             name: form.name,
@@ -171,6 +174,9 @@ export const MenuEditor: React.FC = () => {
           }])
           .select();
           
+        const data = response?.data;
+        const error = response?.error;
+        
         if (error) throw error;
         
         toast({
@@ -178,11 +184,11 @@ export const MenuEditor: React.FC = () => {
           description: "New menu item has been added",
         });
         
-        if (data) {
+        if (data && data.length > 0) {
           setMenuItems(prev => [...prev, data[0]]);
         }
       } else if (selectedItem) {
-        const { error } = await supabase
+        const response = await supabase
           .from('menu_items')
           .update({
             name: form.name,
@@ -193,6 +199,7 @@ export const MenuEditor: React.FC = () => {
           })
           .eq('id', selectedItem.id);
           
+        const error = response?.error;
         if (error) throw error;
         
         toast({

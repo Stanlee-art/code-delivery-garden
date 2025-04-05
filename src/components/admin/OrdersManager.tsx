@@ -43,14 +43,16 @@ export const OrdersManager: React.FC = () => {
         .select(`
           *,
           profiles:user_id (email, address)
-        `)
-        .order('created_at', { ascending: false });
+        `);
         
       if (statusFilter) {
-        query = query.eq('status', statusFilter);
+        const filteredQuery = query.eq('status', statusFilter);
+        query = filteredQuery;
       }
       
-      const { data, error } = await query;
+      const response = await query;
+      const data = response?.data || [];
+      const error = response?.error;
       
       if (error) throw error;
       
@@ -74,11 +76,12 @@ export const OrdersManager: React.FC = () => {
   
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      const { error } = await supabase
+      const response = await supabase
         .from('orders')
         .update({ status: newStatus })
         .eq('id', orderId);
         
+      const error = response?.error;
       if (error) throw error;
       
       // Update local state
