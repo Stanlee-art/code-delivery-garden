@@ -6,7 +6,7 @@ export const CateringSection: React.FC = () => {
   const [reviews, setReviews] = useState<Array<{id: string, name: string, text: string, date: string, visible: boolean}>>([
     { id: '1', name: 'Corporate Event', text: 'The team catered our company event for 200 people. Everything was perfect!', date: '2023-03-15', visible: true },
     { id: '2', name: 'Wedding Reception', text: 'They made our special day even more magical with their delicious food.', date: '2023-03-20', visible: true },
-    { id: '3', name: 'Birthday Party', text: 'Our guests couldn't stop talking about how amazing the food was.', date: '2023-03-25', visible: true },
+    { id: '3', name: 'Birthday Party', text: 'Our guests couldn\'t stop talking about how amazing the food was.', date: '2023-03-25', visible: true },
     { id: '4', name: 'Graduation Party', text: 'Fantastic service and presentation. Would hire again!', date: '2023-03-30', visible: true },
     { id: '5', name: 'Family Reunion', text: 'They accommodated our large group with ease and the food was outstanding.', date: '2023-04-01', visible: true }
   ]);
@@ -211,3 +211,4 @@ export const CateringSection: React.FC = () => {
     </div>
   );
 };
+
