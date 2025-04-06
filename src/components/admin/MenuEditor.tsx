@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, PlusCircle, Edit, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -63,21 +62,17 @@ export const MenuEditor: React.FC = () => {
   const fetchMenuItems = async () => {
     setLoading(true);
     try {
-      let query = supabase
-        .from('menu_items')
-        .select('*');
+      let query = supabase.from('menu_items').select('*');
         
       if (categoryFilter) {
         query = query.eq('category', categoryFilter);
       }
       
-      const response = await query;
-      const data = response?.data || [];
-      const error = response?.error;
+      const { data, error } = await query;
       
       if (error) throw error;
       
-      setMenuItems(data);
+      setMenuItems(data || []);
     } catch (error: any) {
       toast({
         title: "Error loading menu items",
@@ -119,12 +114,11 @@ export const MenuEditor: React.FC = () => {
     if (!confirm('Are you sure you want to delete this menu item?')) return;
     
     try {
-      const response = await supabase
+      const { error } = await supabase
         .from('menu_items')
         .delete()
         .eq('id', id);
         
-      const error = response?.error;
       if (error) throw error;
       
       toast({
@@ -163,7 +157,7 @@ export const MenuEditor: React.FC = () => {
     
     try {
       if (isNewItem) {
-        const response = await supabase
+        const { data, error } = await supabase
           .from('menu_items')
           .insert([{
             name: form.name,
@@ -174,9 +168,6 @@ export const MenuEditor: React.FC = () => {
           }])
           .select();
           
-        const data = response?.data;
-        const error = response?.error;
-        
         if (error) throw error;
         
         toast({
@@ -188,7 +179,7 @@ export const MenuEditor: React.FC = () => {
           setMenuItems(prev => [...prev, data[0]]);
         }
       } else if (selectedItem) {
-        const response = await supabase
+        const { error } = await supabase
           .from('menu_items')
           .update({
             name: form.name,
@@ -199,7 +190,6 @@ export const MenuEditor: React.FC = () => {
           })
           .eq('id', selectedItem.id);
           
-        const error = response?.error;
         if (error) throw error;
         
         toast({

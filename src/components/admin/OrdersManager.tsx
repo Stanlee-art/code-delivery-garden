@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, Filter, Search } from 'lucide-react';
 import {
@@ -46,17 +45,14 @@ export const OrdersManager: React.FC = () => {
         `);
         
       if (statusFilter) {
-        const filteredQuery = query.eq('status', statusFilter);
-        query = filteredQuery;
+        query = query.eq('status', statusFilter);
       }
       
-      const response = await query;
-      const data = response?.data || [];
-      const error = response?.error;
+      const { data, error } = await query;
       
       if (error) throw error;
       
-      const processedOrders = data.map(order => ({
+      const processedOrders = (data || []).map(order => ({
         ...order,
         user_email: order.profiles?.email,
         address: order.profiles?.address
@@ -76,12 +72,11 @@ export const OrdersManager: React.FC = () => {
   
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      const response = await supabase
+      const { error } = await supabase
         .from('orders')
         .update({ status: newStatus })
         .eq('id', orderId);
         
-      const error = response?.error;
       if (error) throw error;
       
       // Update local state

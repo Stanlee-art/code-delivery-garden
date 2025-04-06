@@ -8,7 +8,7 @@ const createDummyClient = () => {
     'Using dummy Supabase client. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
   );
   
-  // Return a stub client that matches the shape of the real Supabase client
+  // Return a stub client that more closely matches the real Supabase client API
   return {
     auth: {
       getSession: async () => ({ data: { session: null }, error: null }),
@@ -19,17 +19,20 @@ const createDummyClient = () => {
       signOut: async () => ({ error: null }),
     },
     from: (table) => ({
-      select: (columns) => ({
-        eq: (column, value) => ({
-          single: async () => ({ data: null, error: null }),
+      select: (columns) => {
+        const builder = {
+          eq: (column, value) => ({
+            single: async () => ({ data: null, error: null }),
+            order: (column, options) => ({ data: [], error: null }),
+            data: [],
+            error: null,
+          }),
           order: (column, options) => ({ data: [], error: null }),
           data: [],
           error: null,
-        }),
-        order: (column, options) => ({ data: [], error: null }),
-        data: [],
-        error: null,
-      }),
+        };
+        return builder;
+      },
       insert: (values) => ({
         select: (columns) => ({
           single: async () => ({ data: null, error: null }),
