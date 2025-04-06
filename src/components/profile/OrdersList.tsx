@@ -46,15 +46,19 @@ export const OrdersList: React.FC<OrdersListProps> = ({ userId }) => {
       const processedOrders = (data || []).map(order => {
         // Handle items properly
         let processedItems: any[] = [];
-        try {
-          if (typeof order.items === 'string') {
+        
+        if (typeof order.items === 'string') {
+          try {
             processedItems = JSON.parse(order.items);
-          } else if (Array.isArray(order.items)) {
-            processedItems = order.items;
+          } catch (e) {
+            console.error('Error parsing order items string:', e);
+            processedItems = [];
           }
-        } catch (e) {
-          processedItems = [];
-          console.error('Error parsing order items:', e);
+        } else if (Array.isArray(order.items)) {
+          processedItems = order.items;
+        } else if (order.items && typeof order.items === 'object') {
+          // Handle case where items might be a JSON object but not an array
+          processedItems = [order.items];
         }
         
         return {
