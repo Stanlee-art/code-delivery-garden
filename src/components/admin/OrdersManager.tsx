@@ -28,7 +28,7 @@ interface Order {
 export const OrdersManager: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   
   useEffect(() => {
@@ -45,7 +45,7 @@ export const OrdersManager: React.FC = () => {
           profiles:user_id (email, address)
         `);
         
-      if (statusFilter) {
+      if (statusFilter && statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
       }
       
@@ -142,7 +142,7 @@ export const OrdersManager: React.FC = () => {
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Statuses</SelectItem>
+              <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="preparing">Preparing</SelectItem>
               <SelectItem value="delivering">Delivering</SelectItem>
@@ -181,7 +181,7 @@ export const OrdersManager: React.FC = () => {
           <p className="text-gray-500 dark:text-gray-400">
             {searchQuery 
               ? "No orders found matching your search criteria" 
-              : statusFilter 
+              : statusFilter !== 'all'
                 ? `No orders with status: ${statusFilter}` 
                 : "No orders found"}
           </p>
