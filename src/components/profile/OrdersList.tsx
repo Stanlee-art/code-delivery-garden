@@ -39,7 +39,13 @@ export const OrdersList: React.FC<OrdersListProps> = ({ userId }) => {
         
       if (error) throw error;
       
-      setOrders(data || []);
+      const processedOrders = (data || []).map(order => ({
+        ...order,
+        // Ensure items is always an array
+        items: Array.isArray(order.items) ? order.items : []
+      }));
+      
+      setOrders(processedOrders);
     } catch (error: any) {
       toast({
         title: "Error loading orders",

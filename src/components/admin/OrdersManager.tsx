@@ -13,12 +13,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Json } from '@/integrations/supabase/types';
 
 interface Order {
   id: string;
   created_at: string;
   status: string;
-  total: number | string;
+  total: number;
   items: any[];
   user_id: string;
   user_email?: string;
@@ -40,26 +41,45 @@ export const OrdersManager: React.FC = () => {
     try {
       let query = supabase
         .from('orders')
-        .select(`
-          *,
-          profiles:user_id (email, address)
-        `);
+        .select(`*`);
         
       if (statusFilter && statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
       }
       
-      const { data, error } = await query;
+      const { data: orderData, error } = await query;
       
       if (error) throw error;
       
-      const processedOrders = (data || []).map(order => ({
-        ...order,
-        user_email: order.profiles?.email,
-        address: order.profiles?.address
+      // Fetch user profiles separately for each order
+      const ordersWithUserDetails = await Promise.all((orderData || []).map(async (order) => {
+        try {
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('email, address')
+            .eq('id', order.user_id)
+            .single();
+          
+          return {
+            ...order,
+            user_email: profileData?.email,
+            address: profileData?.address,
+            // Ensure items is always an array
+            items: Array.isArray(order.items) ? order.items : [],
+          } as Order;
+        } catch (err) {
+          // If profile fetch fails, return order without profile details
+          return {
+            ...order,
+            user_email: undefined,
+            address: undefined,
+            // Ensure items is always an array
+            items: Array.isArray(order.items) ? order.items : [],
+          } as Order;
+        }
       }));
       
-      setOrders(processedOrders);
+      setOrders(ordersWithUserDetails);
     } catch (error: any) {
       toast({
         title: "Error loading orders",

@@ -29,15 +29,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { MenuItemType } from '@/types/menu';
 
-interface MenuItem {
-  id: string;
-  name: string;
-  price: string;
-  description?: string;
-  image?: string;
-  category: string;
-}
+type MenuItem = MenuItemType;
 
 export const MenuEditor: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -75,7 +69,13 @@ export const MenuEditor: React.FC = () => {
       
       if (error) throw error;
       
-      setMenuItems(data || []);
+      // Convert price to number if it's a string for backward compatibility
+      const typedData = (data || []).map(item => ({
+        ...item,
+        price: typeof item.price === 'string' ? parseFloat(item.price) : item.price
+      })) as MenuItem[];
+      
+      setMenuItems(typedData);
     } catch (error: any) {
       toast({
         title: "Error loading menu items",
@@ -91,10 +91,10 @@ export const MenuEditor: React.FC = () => {
     setSelectedItem(item);
     setForm({
       name: item.name,
-      price: item.price,
+      price: item.price.toString(),
       description: item.description || '',
       image: item.image || '',
-      category: item.category,
+      category: item.category || 'appetizers',
     });
     setIsNewItem(false);
     setIsDialogOpen(true);
@@ -159,16 +159,18 @@ export const MenuEditor: React.FC = () => {
     }
     
     try {
+      const priceAsNumber = parseFloat(form.price);
+      
       if (isNewItem) {
         const { data, error } = await supabase
           .from('menu_items')
-          .insert([{
+          .insert({
             name: form.name,
-            price: form.price,
+            price: priceAsNumber,
             description: form.description || null,
             image: form.image || null,
             category: form.category,
-          }])
+          })
           .select();
           
         if (error) throw error;
@@ -179,14 +181,19 @@ export const MenuEditor: React.FC = () => {
         });
         
         if (data && data.length > 0) {
-          setMenuItems(prev => [...prev, data[0] as MenuItem]);
+          const newItem = {
+            ...data[0],
+            price: priceAsNumber
+          } as MenuItem;
+          
+          setMenuItems(prev => [...prev, newItem]);
         }
       } else if (selectedItem) {
         const { error } = await supabase
           .from('menu_items')
           .update({
             name: form.name,
-            price: form.price,
+            price: priceAsNumber,
             description: form.description || null,
             image: form.image || null,
             category: form.category,
@@ -207,7 +214,7 @@ export const MenuEditor: React.FC = () => {
               ? { 
                   ...item, 
                   name: form.name,
-                  price: form.price,
+                  price: priceAsNumber,
                   description: form.description,
                   image: form.image,
                   category: form.category,

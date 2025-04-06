@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useOrder } from '@/contexts/OrderContext';
@@ -87,13 +86,24 @@ export const PaymentForm: React.FC = () => {
           });
       }
       
+      // Prepare order items for storage - make sure it can be serialized to JSON
+      const serializableItems = orderItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: typeof item.price === 'number' ? item.price : parseFloat(item.price),
+        quantity: item.quantity,
+        description: item.description || null,
+        image: item.image || null,
+        category: item.category || null
+      }));
+      
       // Create order in database
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
           user_id: user.id,
           status: 'pending',
-          items: orderItems,
+          items: serializableItems,
           total: totalPrice,
         })
         .select()
