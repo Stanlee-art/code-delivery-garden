@@ -1,5 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/integrations/supabase/types';
 
 // Create a temporary dummy client if no environment variables are available
 // This prevents the app from crashing on initial load
@@ -19,7 +20,7 @@ const createDummyClient = () => {
       signOut: async () => ({ error: null }),
     },
     from: (table) => ({
-      select: (columns) => {
+      select: (columns = '*') => {
         const builder = {
           eq: (column, value) => ({
             single: async () => ({ data: null, error: null }),
@@ -34,7 +35,7 @@ const createDummyClient = () => {
         return builder;
       },
       insert: (values) => ({
-        select: (columns) => ({
+        select: (columns = '*') => ({
           single: async () => ({ data: null, error: null }),
           data: null,
           error: null,
@@ -56,6 +57,9 @@ const createDummyClient = () => {
       }),
       upsert: async (values) => ({ data: null, error: null }),
     }),
+    functions: {
+      invoke: async () => ({ data: null, error: null }),
+    },
   };
 };
 
@@ -65,5 +69,5 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIU
 
 // Export the Supabase client
 export const supabase = (supabaseUrl && supabaseAnonKey) 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : createDummyClient();
+  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
+  : createDummyClient() as unknown as ReturnType<typeof createClient<Database>>;

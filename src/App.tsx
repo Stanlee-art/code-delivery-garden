@@ -8,7 +8,7 @@ import { SignupPage } from './pages/SignupPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
-import { supabase } from './lib/supabase';
+import { supabase } from './integrations/supabase/client';
 import './App.css';
 
 // Protected route component

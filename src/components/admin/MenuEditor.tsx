@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, PlusCircle, Edit, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -62,7 +63,9 @@ export const MenuEditor: React.FC = () => {
   const fetchMenuItems = async () => {
     setLoading(true);
     try {
-      let query = supabase.from('menu_items').select('*');
+      let query = supabase
+        .from('menu_items')
+        .select('*');
         
       if (categoryFilter) {
         query = query.eq('category', categoryFilter);
@@ -176,7 +179,7 @@ export const MenuEditor: React.FC = () => {
         });
         
         if (data && data.length > 0) {
-          setMenuItems(prev => [...prev, data[0]]);
+          setMenuItems(prev => [...prev, data[0] as MenuItem]);
         }
       } else if (selectedItem) {
         const { error } = await supabase

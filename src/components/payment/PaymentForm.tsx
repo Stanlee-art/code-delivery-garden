@@ -83,7 +83,7 @@ export const PaymentForm: React.FC = () => {
           .upsert({
             id: user.id,
             address,
-            updated_at: new Date()
+            updated_at: new Date().toISOString()
           });
       }
       
