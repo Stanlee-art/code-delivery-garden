@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, CreditCard, MapPin } from 'lucide-react';
+import { Loader2, CreditCard, MapPin, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -135,6 +135,7 @@ export const PaymentForm: React.FC = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -211,22 +212,46 @@ export const PaymentForm: React.FC = () => {
         </CardContent>
       </Card>
       
-      <Card>
+      <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg">Order Summary</CardTitle>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5" />
+            Order Summary
+          </CardTitle>
+          <CardDescription>
+            {orderItems.length} item(s) in your order
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex justify-between">
-            <span>Subtotal:</span>
-            <span>${totalPrice.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Delivery Fee:</span>
-            <span>$2.50</span>
-          </div>
-          <div className="border-t pt-2 mt-2 flex justify-between font-bold">
-            <span>Total:</span>
-            <span>${(totalPrice + 2.50).toFixed(2)}</span>
+        <CardContent className="space-y-4">
+          {orderItems.length > 0 ? (
+            <div className="max-h-60 overflow-y-auto mb-4">
+              {orderItems.map((item) => (
+                <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
+                  <div>
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">x{item.quantity}</p>
+                  </div>
+                  <p className="font-medium">${(Number(item.price) * item.quantity).toFixed(2)}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">No items in your order</p>
+          )}
+
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span>Subtotal:</span>
+              <span>${totalPrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Delivery Fee:</span>
+              <span>$2.50</span>
+            </div>
+            <div className="border-t pt-2 mt-2 flex justify-between font-bold">
+              <span>Total:</span>
+              <span>${(totalPrice + 2.50).toFixed(2)}</span>
+            </div>
           </div>
         </CardContent>
         <CardFooter>
