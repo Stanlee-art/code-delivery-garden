@@ -4,6 +4,8 @@ import { PaymentForm } from '@/components/payment/PaymentForm';
 import { Header } from '@/components/Header';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Toaster } from '@/components/ui/toaster';
+import { OrderProvider } from '@/contexts/OrderContext';
+import { translations } from '@/utils/translations';
 
 export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
@@ -20,9 +22,11 @@ export const CheckoutPage: React.FC = () => {
         isMobile={isMobile}
         toggleMobileMenu={() => {}}
       />
-      <main className="container mx-auto py-10">
-        <PaymentForm />
-      </main>
+      <OrderProvider language="en">
+        <main className="container mx-auto py-10">
+          <PaymentForm />
+        </main>
+      </OrderProvider>
       <Toaster />
     </>
   );
