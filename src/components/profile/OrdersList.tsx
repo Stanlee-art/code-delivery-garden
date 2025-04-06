@@ -42,14 +42,14 @@ export const OrdersList: React.FC<OrdersListProps> = ({ userId }) => {
         
       if (error) throw error;
       
-      // Convert items from JSON if needed
+      // Process orders to ensure items is always an array
       const processedOrders = (data || []).map(order => {
         // Handle items properly
-        let processedItems = [];
+        let processedItems: any[] = [];
         try {
           if (typeof order.items === 'string') {
             processedItems = JSON.parse(order.items);
-          } else {
+          } else if (Array.isArray(order.items)) {
             processedItems = order.items;
           }
         } catch (e) {
@@ -59,8 +59,8 @@ export const OrdersList: React.FC<OrdersListProps> = ({ userId }) => {
         
         return {
           ...order,
-          items: Array.isArray(processedItems) ? processedItems : []
-        };
+          items: processedItems
+        } as OrderItem;
       });
       
       setOrders(processedOrders);
