@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useOrder } from '@/contexts/OrderContext';
@@ -13,6 +14,7 @@ import {
 import { toast } from '@/hooks/use-toast';
 import { Loader2, CreditCard, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const PaymentForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -59,6 +61,15 @@ export const PaymentForm: React.FC = () => {
       return;
     }
 
+    if (orderItems.length === 0) {
+      toast({
+        title: "Empty order",
+        description: "Please add items to your order before proceeding",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     
     try {
@@ -90,7 +101,7 @@ export const PaymentForm: React.FC = () => {
       const serializableItems = orderItems.map(item => ({
         id: item.id,
         name: item.name,
-        price: typeof item.price === 'number' ? item.price : parseFloat(item.price),
+        price: typeof item.price === 'string' ? parseFloat(item.price) : item.price,
         quantity: item.quantity,
         description: item.description || null,
         image: item.image || null,
@@ -106,25 +117,21 @@ export const PaymentForm: React.FC = () => {
           items: serializableItems,
           total: totalPrice,
         })
-        .select()
-        .single();
+        .select();
         
       if (orderError) throw orderError;
 
-      // For now, simulate payment success immediately
-      // In a real app, this would integrate with a payment gateway API
-      setTimeout(() => {
-        toast({
-          title: "Payment successful",
-          description: "Your order has been placed successfully",
-        });
-        
-        clearOrder();
-        navigate('/profile');
-      }, 1500);
+      // Success
+      toast({
+        title: "Order confirmed!",
+        description: "Your order has been placed successfully",
+      });
+      
+      clearOrder();
+      navigate('/profile');
     } catch (error: any) {
       toast({
-        title: "Payment failed",
+        title: "Order submission failed",
         description: error.message,
         variant: "destructive",
       });
@@ -134,9 +141,19 @@ export const PaymentForm: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-[#684b2c] dark:text-white text-center">
-        Complete Your Order
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#684b2c] dark:text-white">
+          Complete Your Order
+        </h2>
+        <div className="flex gap-2">
+          <Link to="/" className="text-sm px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+            Menu
+          </Link>
+          <Link to="/profile" className="text-sm px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+            Profile
+          </Link>
+        </div>
+      </div>
       
       <Card className="mb-6">
         <CardHeader>

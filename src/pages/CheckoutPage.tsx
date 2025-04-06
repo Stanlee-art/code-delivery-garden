@@ -6,6 +6,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Toaster } from '@/components/ui/toaster';
 import { OrderProvider } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
+import { Link } from 'react-router-dom';
+import { Home, User } from 'lucide-react';
 
 export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
