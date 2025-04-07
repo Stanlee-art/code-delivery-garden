@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Filter, Search } from 'lucide-react';
+import { Loader2, Filter, Search, Truck, Utensils } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -23,6 +23,7 @@ interface Order {
   user_id: string;
   user_email?: string;
   address?: string;
+  delivery_type?: 'delivery' | 'dine-in';
 }
 
 export const OrdersManager: React.FC = () => {
@@ -46,7 +47,7 @@ export const OrdersManager: React.FC = () => {
         query = query.eq('status', statusFilter);
       }
       
-      const { data: orderData, error } = await query;
+      const { data: orderData, error } = await query.order('created_at', { ascending: false });
       
       if (error) throw error;
       
@@ -219,6 +220,19 @@ export const OrdersManager: React.FC = () => {
                     <Badge className={getStatusColor(order.status)}>
                       {order.status}
                     </Badge>
+                    {order.delivery_type && (
+                      <Badge variant="outline" className="ml-2">
+                        {order.delivery_type === 'delivery' ? (
+                          <span className="flex items-center gap-1">
+                            <Truck className="h-3 w-3" /> Delivery
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1">
+                            <Utensils className="h-3 w-3" /> Dine-in
+                          </span>
+                        )}
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     {new Date(order.created_at).toLocaleString()}
@@ -246,7 +260,9 @@ export const OrdersManager: React.FC = () => {
                 <div>
                   <h4 className="text-sm font-medium mb-2">Customer Details</h4>
                   <p className="text-sm">Email: {order.user_email || 'N/A'}</p>
-                  <p className="text-sm mt-1">Delivery Address: {order.address || 'N/A'}</p>
+                  {order.delivery_type === 'delivery' && (
+                    <p className="text-sm mt-1">Delivery Address: {order.address || 'N/A'}</p>
+                  )}
                 </div>
                 
                 <div>

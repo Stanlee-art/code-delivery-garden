@@ -46,15 +46,15 @@ export const OrderSummary: React.FC = () => {
     }
 
     // Check if user is logged in
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
       toast({
         title: "Please log in",
         description: "You need to be logged in to checkout",
         variant: "destructive",
       });
-      navigate('/login');
       setShowOrderSummary(false);
+      navigate('/login');
       return;
     }
 

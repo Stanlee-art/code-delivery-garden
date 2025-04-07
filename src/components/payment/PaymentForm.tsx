@@ -101,7 +101,7 @@ export const PaymentForm: React.FC = () => {
       }
 
       // Save or update address if this is a delivery order
-      if (deliveryOption === 'delivery' && !hasAddress) {
+      if (deliveryOption === 'delivery') {
         await supabase
           .from('profiles')
           .upsert({
@@ -147,6 +147,7 @@ export const PaymentForm: React.FC = () => {
       clearOrder();
       navigate('/profile');
     } catch (error: any) {
+      console.error('Order submission error:', error);
       toast({
         title: "Order submission failed",
         description: error.message,

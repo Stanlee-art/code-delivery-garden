@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { useOrder, DeliveryOption } from '@/contexts/OrderContext';
 import { Truck, Utensils } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from '@/hooks/use-toast';
 
 interface DeliveryOptionDialogProps {
   open: boolean;
@@ -22,10 +23,20 @@ export const DeliveryOptionDialog: React.FC<DeliveryOptionDialogProps> = ({
   open,
   onOpenChange
 }) => {
-  const { setDeliveryOption } = useOrder();
+  const { setDeliveryOption, orderItems } = useOrder();
   const navigate = useNavigate();
 
   const handleOptionSelect = (option: DeliveryOption) => {
+    if (orderItems.length === 0) {
+      toast({
+        title: "Empty cart",
+        description: "Please add items to your order first",
+        variant: "destructive",
+      });
+      onOpenChange(false);
+      return;
+    }
+    
     setDeliveryOption(option);
     onOpenChange(false);
     navigate('/checkout');

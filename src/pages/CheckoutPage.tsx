@@ -1,16 +1,36 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PaymentForm } from '@/components/payment/PaymentForm';
 import { Header } from '@/components/Header';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Toaster } from '@/components/ui/toaster';
 import { OrderProvider } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Home, User, ShoppingBag } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { toast } from '@/hooks/use-toast';
 
 export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  
+  // Check if user is authenticated
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Authentication required",
+          description: "Please log in to complete your order",
+          variant: "destructive",
+        });
+        navigate('/login');
+      }
+    };
+    
+    checkUser();
+  }, [navigate]);
   
   return (
     <OrderProvider language="en">
