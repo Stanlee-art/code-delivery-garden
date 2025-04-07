@@ -6,7 +6,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Toaster } from '@/components/ui/toaster';
 import { OrderProvider } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, User, ShoppingBag } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
@@ -15,6 +15,7 @@ import { DeliveryOptionDialog } from '@/components/DeliveryOptionDialog';
 export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
   
   // Check if user is authenticated

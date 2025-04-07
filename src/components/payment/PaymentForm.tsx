@@ -56,9 +56,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onShowDeliveryOptions 
     getUserAddress();
   }, []);
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty - adding debug logs to understand the issue
   useEffect(() => {
+    console.log('Order items in PaymentForm:', orderItems);
+    
     if (orderItems.length === 0) {
+      console.log('Cart is empty, redirecting to home');
       toast({
         title: "Empty cart",
         description: "Please add items to your cart before checkout",
@@ -187,6 +190,9 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onShowDeliveryOptions 
       setLoading(false);
     }
   };
+
+  // Add debugging to check if order items exist
+  console.log('Rendering PaymentForm with orderItems:', orderItems);
 
   return (
     <div className="max-w-xl mx-auto p-6">
