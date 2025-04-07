@@ -17,7 +17,11 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
-export const PaymentForm: React.FC = () => {
+interface PaymentFormProps {
+  onShowDeliveryOptions?: () => void;
+}
+
+export const PaymentForm: React.FC<PaymentFormProps> = ({ onShowDeliveryOptions }) => {
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState('');
   const [hasAddress, setHasAddress] = useState(false);
@@ -52,17 +56,43 @@ export const PaymentForm: React.FC = () => {
     getUserAddress();
   }, []);
 
-  // Redirect if no delivery option is selected
+  // Redirect if cart is empty
   useEffect(() => {
-    if (deliveryOption === null) {
-      navigate('/');
+    if (orderItems.length === 0) {
       toast({
-        title: "Invalid checkout",
-        description: "Please select items and a delivery option first",
+        title: "Empty cart",
+        description: "Please add items to your cart before checkout",
         variant: "destructive",
       });
+      navigate('/');
     }
-  }, [deliveryOption, navigate]);
+  }, [orderItems, navigate]);
+
+  // If no delivery option is selected, show a message and button to select one
+  if (deliveryOption === null) {
+    return (
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5" />
+            Delivery Option Required
+          </CardTitle>
+          <CardDescription>
+            Please select how you would like your order
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center py-8">
+          <p className="mb-4">You need to select whether you want delivery or dine-in before proceeding to checkout.</p>
+          <Button 
+            onClick={onShowDeliveryOptions}
+            className="bg-[#684b2c] hover:bg-[#a77e58]"
+          >
+            Select Delivery Option
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const processPayment = async () => {
     // Check if address is required and provided

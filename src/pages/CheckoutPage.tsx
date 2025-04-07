@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PaymentForm } from '@/components/payment/PaymentForm';
 import { Header } from '@/components/Header';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -10,10 +10,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Home, User, ShoppingBag } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
+import { DeliveryOptionDialog } from '@/components/DeliveryOptionDialog';
 
 export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
   
   // Check if user is authenticated
   useEffect(() => {
@@ -50,8 +52,12 @@ export const CheckoutPage: React.FC = () => {
         </div>
       </header>
       <main className="container mx-auto py-10">
-        <PaymentForm />
+        <PaymentForm onShowDeliveryOptions={() => setShowDeliveryOptions(true)} />
       </main>
+      <DeliveryOptionDialog 
+        open={showDeliveryOptions} 
+        onOpenChange={setShowDeliveryOptions} 
+      />
       <Toaster />
     </OrderProvider>
   );

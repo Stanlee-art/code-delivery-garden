@@ -28,7 +28,8 @@ export const OrderSummary: React.FC = () => {
     showOrderSummary, 
     setShowOrderSummary, 
     clearOrder,
-    language
+    language,
+    deliveryOption
   } = useOrder();
   
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
@@ -59,7 +60,13 @@ export const OrderSummary: React.FC = () => {
     }
 
     setShowOrderSummary(false);
-    setShowDeliveryOptions(true);
+    
+    // If delivery option is already selected, go directly to checkout
+    if (deliveryOption) {
+      navigate('/checkout');
+    } else {
+      setShowDeliveryOptions(true);
+    }
   };
 
   return (

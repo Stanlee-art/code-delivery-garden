@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useOrder, DeliveryOption } from '@/contexts/OrderContext';
 import { Truck, Utensils } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
 interface DeliveryOptionDialogProps {
@@ -25,6 +25,7 @@ export const DeliveryOptionDialog: React.FC<DeliveryOptionDialogProps> = ({
 }) => {
   const { setDeliveryOption, orderItems } = useOrder();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleOptionSelect = (option: DeliveryOption) => {
     if (orderItems.length === 0) {
@@ -39,7 +40,11 @@ export const DeliveryOptionDialog: React.FC<DeliveryOptionDialogProps> = ({
     
     setDeliveryOption(option);
     onOpenChange(false);
-    navigate('/checkout');
+    
+    // If we're already on the checkout page, no need to navigate
+    if (location.pathname !== '/checkout') {
+      navigate('/checkout');
+    }
   };
 
   return (
