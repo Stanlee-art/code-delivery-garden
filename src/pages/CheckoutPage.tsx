@@ -13,7 +13,7 @@ export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
   
   return (
-    <>
+    <OrderProvider language="en">
       <header className="bg-[#684b2c] text-white py-4 shadow-md">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">Checkout</h1>
@@ -33,6 +33,6 @@ export const CheckoutPage: React.FC = () => {
         <PaymentForm />
       </main>
       <Toaster />
-    </>
+    </OrderProvider>
   );
 };
