@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useOrder } from '@/contexts/OrderContext';
+import { useOrder, DeliveryOption } from '@/contexts/OrderContext';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,19 +12,20 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, CreditCard, MapPin, ShoppingBag } from 'lucide-react';
+import { Loader2, CreditCard, MapPin, ShoppingBag, Utensils, Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 
 export const PaymentForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState('');
   const [hasAddress, setHasAddress] = useState(false);
-  const { orderItems, totalPrice, clearOrder } = useOrder();
+  const { orderItems, totalPrice, clearOrder, deliveryOption } = useOrder();
   const navigate = useNavigate();
 
   // Fetch user's saved address if logged in
-  React.useEffect(() => {
+  useEffect(() => {
     const getUserAddress = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -51,8 +52,21 @@ export const PaymentForm: React.FC = () => {
     getUserAddress();
   }, []);
 
+  // Redirect if no delivery option is selected
+  useEffect(() => {
+    if (deliveryOption === null) {
+      navigate('/');
+      toast({
+        title: "Invalid checkout",
+        description: "Please select items and a delivery option first",
+        variant: "destructive",
+      });
+    }
+  }, [deliveryOption, navigate]);
+
   const processPayment = async () => {
-    if (!address) {
+    // Check if address is required and provided
+    if (deliveryOption === 'delivery' && !address) {
       toast({
         title: "Delivery address required",
         description: "Please enter your delivery address",
@@ -86,8 +100,8 @@ export const PaymentForm: React.FC = () => {
         return;
       }
 
-      // Save or update address
-      if (!hasAddress) {
+      // Save or update address if this is a delivery order
+      if (deliveryOption === 'delivery' && !hasAddress) {
         await supabase
           .from('profiles')
           .upsert({
@@ -97,7 +111,7 @@ export const PaymentForm: React.FC = () => {
           });
       }
       
-      // Prepare order items for storage - make sure it can be serialized to JSON
+      // Prepare order items for storage
       const serializableItems = orderItems.map(item => ({
         id: item.id,
         name: item.name,
@@ -113,9 +127,10 @@ export const PaymentForm: React.FC = () => {
         .from('orders')
         .insert({
           user_id: user.id,
-          status: 'pending',
+          status: deliveryOption === 'delivery' ? 'preparing' : 'pending',
           items: serializableItems,
-          total: totalPrice,
+          total: totalPrice + (deliveryOption === 'delivery' ? 2.50 : 0),
+          delivery_type: deliveryOption
         })
         .select();
         
@@ -124,7 +139,9 @@ export const PaymentForm: React.FC = () => {
       // Success
       toast({
         title: "Order confirmed!",
-        description: "Your order has been placed successfully",
+        description: deliveryOption === 'delivery' 
+          ? "Your order is being prepared for delivery" 
+          : "Your order is being prepared for dine-in",
       });
       
       clearOrder();
@@ -156,27 +173,45 @@ export const PaymentForm: React.FC = () => {
         </div>
       </div>
       
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            Delivery Address
-          </CardTitle>
-          <CardDescription>
-            Where should we deliver your order?
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <textarea
-            className="w-full border border-gray-300 dark:border-gray-700 rounded-md p-3 bg-white dark:bg-gray-800"
-            rows={3}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter your delivery address..."
-            required
-          />
-        </CardContent>
-      </Card>
+      <div className="mb-6 flex items-center">
+        <Badge className="bg-[#684b2c] text-white">
+          {deliveryOption === 'delivery' ? (
+            <div className="flex items-center gap-2">
+              <Truck className="h-3 w-3" />
+              <span>Delivery</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Utensils className="h-3 w-3" />
+              <span>Dine-In</span>
+            </div>
+          )}
+        </Badge>
+      </div>
+      
+      {deliveryOption === 'delivery' && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              Delivery Address
+            </CardTitle>
+            <CardDescription>
+              Where should we deliver your order?
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <textarea
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-md p-3 bg-white dark:bg-gray-800"
+              rows={3}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Enter your delivery address..."
+              required
+            />
+          </CardContent>
+        </Card>
+      )}
       
       <Card className="mb-6">
         <CardHeader>
@@ -201,7 +236,7 @@ export const PaymentForm: React.FC = () => {
                 readOnly
               />
               <label htmlFor="cashOnDelivery" className="ml-2 text-sm font-medium">
-                Cash on Delivery
+                {deliveryOption === 'delivery' ? 'Cash on Delivery' : 'Pay at Restaurant'}
               </label>
             </div>
             
@@ -244,13 +279,15 @@ export const PaymentForm: React.FC = () => {
               <span>Subtotal:</span>
               <span>${totalPrice.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between">
-              <span>Delivery Fee:</span>
-              <span>$2.50</span>
-            </div>
+            {deliveryOption === 'delivery' && (
+              <div className="flex justify-between">
+                <span>Delivery Fee:</span>
+                <span>$2.50</span>
+              </div>
+            )}
             <div className="border-t pt-2 mt-2 flex justify-between font-bold">
               <span>Total:</span>
-              <span>${(totalPrice + 2.50).toFixed(2)}</span>
+              <span>${(totalPrice + (deliveryOption === 'delivery' ? 2.50 : 0)).toFixed(2)}</span>
             </div>
           </div>
         </CardContent>

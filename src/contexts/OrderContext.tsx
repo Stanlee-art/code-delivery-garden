@@ -1,8 +1,9 @@
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { MenuItemType } from '@/types/menu';
 import { toast } from '@/hooks/use-toast';
 import { translations, SupportedLanguage } from '@/utils/translations';
+
+export type DeliveryOption = 'delivery' | 'dine-in';
 
 interface OrderItem extends MenuItemType {
   quantity: number;
@@ -20,6 +21,8 @@ interface OrderContextType {
   showOrderSummary: boolean;
   setShowOrderSummary: (show: boolean) => void;
   language: SupportedLanguage;
+  deliveryOption: DeliveryOption | null;
+  setDeliveryOption: (option: DeliveryOption) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -27,6 +30,7 @@ const OrderContext = createContext<OrderContextType | undefined>(undefined);
 export const OrderProvider = ({ children, language }: { children: ReactNode, language: SupportedLanguage }) => {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [deliveryOption, setDeliveryOption] = useState<DeliveryOption | null>(null);
 
   const addToOrder = (item: MenuItemType) => {
     setOrderItems(prevItems => {
@@ -76,9 +80,9 @@ export const OrderProvider = ({ children, language }: { children: ReactNode, lan
 
   const clearOrder = () => {
     setOrderItems([]);
+    setDeliveryOption(null);
   };
 
-  // Calculate total items and price
   const totalItems = orderItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = orderItems.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity, 
@@ -97,7 +101,9 @@ export const OrderProvider = ({ children, language }: { children: ReactNode, lan
       totalPrice,
       showOrderSummary,
       setShowOrderSummary,
-      language
+      language,
+      deliveryOption,
+      setDeliveryOption
     }}>
       {children}
     </OrderContext.Provider>

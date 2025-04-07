@@ -29,11 +29,9 @@ export const CheckoutPage: React.FC = () => {
           </div>
         </div>
       </header>
-      <OrderProvider language="en">
-        <main className="container mx-auto py-10">
-          <PaymentForm />
-        </main>
-      </OrderProvider>
+      <main className="container mx-auto py-10">
+        <PaymentForm />
+      </main>
       <Toaster />
     </>
   );
