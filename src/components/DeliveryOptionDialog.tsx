@@ -41,10 +41,8 @@ export const DeliveryOptionDialog: React.FC<DeliveryOptionDialogProps> = ({
     setDeliveryOption(option);
     onOpenChange(false);
     
-    // If we're already on the checkout page, no need to navigate
-    if (location.pathname !== '/checkout') {
-      navigate('/checkout');
-    }
+    // Always navigate to checkout after selecting a delivery option
+    navigate('/checkout');
   };
 
   return (

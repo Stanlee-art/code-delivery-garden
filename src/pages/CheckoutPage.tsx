@@ -4,7 +4,6 @@ import { PaymentForm } from '@/components/payment/PaymentForm';
 import { Header } from '@/components/Header';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Toaster } from '@/components/ui/toaster';
-import { OrderProvider } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, User, ShoppingBag } from 'lucide-react';
@@ -36,7 +35,7 @@ export const CheckoutPage: React.FC = () => {
   }, [navigate]);
   
   return (
-    <OrderProvider language="en">
+    <>
       <header className="bg-[#684b2c] text-white py-4 shadow-md">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">Checkout</h1>
@@ -60,6 +59,6 @@ export const CheckoutPage: React.FC = () => {
         onOpenChange={setShowDeliveryOptions} 
       />
       <Toaster />
-    </OrderProvider>
+    </>
   );
 };

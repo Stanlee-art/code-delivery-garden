@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrder } from '@/contexts/OrderContext';
@@ -62,6 +61,7 @@ export const OrderSummary: React.FC = () => {
     setShowOrderSummary(false);
     
     // If delivery option is already selected, go directly to checkout
+    // Otherwise show delivery options dialog
     if (deliveryOption) {
       navigate('/checkout');
     } else {
