@@ -1,38 +1,16 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { PaymentForm } from '@/components/payment/PaymentForm';
 import { Header } from '@/components/Header';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Toaster } from '@/components/ui/toaster';
+import { OrderProvider } from '@/contexts/OrderContext';
 import { translations } from '@/utils/translations';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Home, User, ShoppingBag } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { toast } from '@/hooks/use-toast';
-import { DeliveryOptionDialog } from '@/components/DeliveryOptionDialog';
 
 export const CheckoutPage: React.FC = () => {
   const isMobile = useIsMobile();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
-  
-  // Check if user is authenticated
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast({
-          title: "Authentication required",
-          description: "Please log in to complete your order",
-          variant: "destructive",
-        });
-        navigate('/login');
-      }
-    };
-    
-    checkUser();
-  }, [navigate]);
   
   return (
     <>
@@ -51,13 +29,11 @@ export const CheckoutPage: React.FC = () => {
           </div>
         </div>
       </header>
-      <main className="container mx-auto py-10">
-        <PaymentForm onShowDeliveryOptions={() => setShowDeliveryOptions(true)} />
-      </main>
-      <DeliveryOptionDialog 
-        open={showDeliveryOptions} 
-        onOpenChange={setShowDeliveryOptions} 
-      />
+      <OrderProvider language="en">
+        <main className="container mx-auto py-10">
+          <PaymentForm />
+        </main>
+      </OrderProvider>
       <Toaster />
     </>
   );

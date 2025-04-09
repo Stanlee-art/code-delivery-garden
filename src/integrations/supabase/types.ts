@@ -42,7 +42,6 @@ export type Database = {
       orders: {
         Row: {
           created_at: string | null
-          delivery_type: string | null
           id: string
           items: Json
           status: string
@@ -51,7 +50,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          delivery_type?: string | null
           id?: string
           items: Json
           status?: string
@@ -60,7 +58,6 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
-          delivery_type?: string | null
           id?: string
           items?: Json
           status?: string
@@ -75,21 +72,18 @@ export type Database = {
           created_at: string | null
           email: string | null
           id: string
-          updated_at: string | null
         }
         Insert: {
           address?: string | null
           created_at?: string | null
           email?: string | null
           id: string
-          updated_at?: string | null
         }
         Update: {
           address?: string | null
           created_at?: string | null
           email?: string | null
           id?: string
-          updated_at?: string | null
         }
         Relationships: []
       }

@@ -31,7 +31,7 @@ export const LocationForm: React.FC<LocationFormProps> = ({
         .upsert({ 
           id: userId,
           address: address,
-          updated_at: new Date().toISOString() // Convert Date to ISO string
+          updated_at: new Date()
         });
         
       if (error) throw error;
