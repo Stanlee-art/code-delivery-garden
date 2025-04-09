@@ -15,6 +15,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
 import { translations } from '@/utils/translations';
 import { ShoppingCart, CreditCard } from 'lucide-react'; 
+import { DeliveryOptionDialog } from './DeliveryOptionDialog';
+import { supabase } from '@/lib/supabase';
 
 export const OrderSummary: React.FC = () => {
   const { 
@@ -26,15 +28,45 @@ export const OrderSummary: React.FC = () => {
     showOrderSummary, 
     setShowOrderSummary, 
     clearOrder,
-    language
+    language,
+    deliveryOption
   } = useOrder();
   
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
+  const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
   const navigate = useNavigate();
 
-  const handleProceedToCheckout = () => {
+  const handleProceedToCheckout = async () => {
+    if (orderItems.length === 0) {
+      toast({
+        title: "Empty cart",
+        description: "Please add items to your order first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check if user is logged in
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({
+        title: "Please log in",
+        description: "You need to be logged in to checkout",
+        variant: "destructive",
+      });
+      setShowOrderSummary(false);
+      navigate('/login');
+      return;
+    }
+
     setShowOrderSummary(false);
-    navigate('/checkout');
+    
+    // If delivery option is already selected, go directly to checkout
+    if (deliveryOption) {
+      navigate('/checkout');
+    } else {
+      setShowDeliveryOptions(true);
+    }
   };
 
   return (
@@ -135,6 +167,12 @@ export const OrderSummary: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <DeliveryOptionDialog 
+        open={showDeliveryOptions} 
+        onOpenChange={setShowDeliveryOptions} 
+      />
+      
       <Toaster />
     </>
   );

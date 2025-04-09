@@ -39,7 +39,7 @@ export const MenuEditor: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isNewItem, setIsNewItem] = useState(false);
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   
   // Form state
   const [form, setForm] = useState({
@@ -61,7 +61,7 @@ export const MenuEditor: React.FC = () => {
         .from('menu_items')
         .select('*');
         
-      if (categoryFilter) {
+      if (categoryFilter && categoryFilter !== 'all') {
         query = query.eq('category', categoryFilter);
       }
       
@@ -263,7 +263,7 @@ export const MenuEditor: React.FC = () => {
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             <SelectItem value="appetizers">Appetizers</SelectItem>
             <SelectItem value="mainCourse">Main Course</SelectItem>
             <SelectItem value="desserts">Desserts</SelectItem>
@@ -288,7 +288,7 @@ export const MenuEditor: React.FC = () => {
       ) : menuItems.length === 0 ? (
         <div className="text-center py-10">
           <p className="text-gray-500 dark:text-gray-400">
-            {categoryFilter 
+            {categoryFilter !== 'all'
               ? `No items found in the ${getCategoryName(categoryFilter)} category` 
               : "No menu items found"}
           </p>

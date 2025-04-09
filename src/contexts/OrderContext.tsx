@@ -1,8 +1,10 @@
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { MenuItemType } from '@/types/menu';
 import { toast } from '@/hooks/use-toast';
 import { translations, SupportedLanguage } from '@/utils/translations';
+
+export type DeliveryOption = 'delivery' | 'dine-in';
 
 interface OrderItem extends MenuItemType {
   quantity: number;
@@ -20,13 +22,59 @@ interface OrderContextType {
   showOrderSummary: boolean;
   setShowOrderSummary: (show: boolean) => void;
   language: SupportedLanguage;
+  deliveryOption: DeliveryOption | null;
+  setDeliveryOption: (option: DeliveryOption) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
+// Create a key for localStorage
+const ORDER_STORAGE_KEY = 'coffee_shop_order_items';
+const DELIVERY_OPTION_KEY = 'coffee_shop_delivery_option';
+
 export const OrderProvider = ({ children, language }: { children: ReactNode, language: SupportedLanguage }) => {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [deliveryOption, setDeliveryOption] = useState<DeliveryOption | null>(null);
+
+  // Load saved order from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedOrder = localStorage.getItem(ORDER_STORAGE_KEY);
+      if (savedOrder) {
+        setOrderItems(JSON.parse(savedOrder));
+      }
+      
+      const savedDeliveryOption = localStorage.getItem(DELIVERY_OPTION_KEY);
+      if (savedDeliveryOption) {
+        setDeliveryOption(savedDeliveryOption as DeliveryOption);
+      }
+    } catch (error) {
+      console.error('Error loading saved order:', error);
+    }
+  }, []);
+
+  // Save order to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orderItems));
+    } catch (error) {
+      console.error('Error saving order to localStorage:', error);
+    }
+  }, [orderItems]);
+
+  // Save delivery option to localStorage when it changes
+  useEffect(() => {
+    try {
+      if (deliveryOption) {
+        localStorage.setItem(DELIVERY_OPTION_KEY, deliveryOption);
+      } else {
+        localStorage.removeItem(DELIVERY_OPTION_KEY);
+      }
+    } catch (error) {
+      console.error('Error saving delivery option to localStorage:', error);
+    }
+  }, [deliveryOption]);
 
   const addToOrder = (item: MenuItemType) => {
     setOrderItems(prevItems => {
@@ -76,9 +124,12 @@ export const OrderProvider = ({ children, language }: { children: ReactNode, lan
 
   const clearOrder = () => {
     setOrderItems([]);
+    setDeliveryOption(null);
+    // Also clear from localStorage
+    localStorage.removeItem(ORDER_STORAGE_KEY);
+    localStorage.removeItem(DELIVERY_OPTION_KEY);
   };
 
-  // Calculate total items and price
   const totalItems = orderItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = orderItems.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity, 
@@ -97,7 +148,9 @@ export const OrderProvider = ({ children, language }: { children: ReactNode, lan
       totalPrice,
       showOrderSummary,
       setShowOrderSummary,
-      language
+      language,
+      deliveryOption,
+      setDeliveryOption
     }}>
       {children}
     </OrderContext.Provider>
